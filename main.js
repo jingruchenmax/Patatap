@@ -5,7 +5,6 @@
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
   var __commonJS = (cb, mod2) => function __require() {
     return mod2 || (0, cb[__getOwnPropNames(cb)[0]])((mod2 = { exports: {} }).exports, mod2), mod2.exports;
   };
@@ -18,35 +17,13 @@
     return to;
   };
   var __toESM = (mod2, isNodeMode, target) => (target = mod2 != null ? __create(__getProtoOf(mod2)) : {}, __copyProps(
+    // If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
     isNodeMode || !mod2 || !mod2.__esModule ? __defProp(target, "default", { value: mod2, enumerable: true }) : target,
     mod2
   ));
-  var __publicField = (obj, key, value) => {
-    __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-    return value;
-  };
-  var __accessCheck = (obj, member, msg) => {
-    if (!member.has(obj))
-      throw TypeError("Cannot " + msg);
-  };
-  var __privateGet = (obj, member, getter) => {
-    __accessCheck(obj, member, "read from private field");
-    return getter ? getter.call(obj) : member.get(obj);
-  };
-  var __privateAdd = (obj, member, value) => {
-    if (member.has(obj))
-      throw TypeError("Cannot add the same private member more than once");
-    member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
-  };
-  var __privateSet = (obj, member, value, setter) => {
-    __accessCheck(obj, member, "write to private field");
-    setter ? setter.call(obj, value) : member.set(obj, value);
-    return value;
-  };
-  var __privateMethod = (obj, member, method) => {
-    __accessCheck(obj, member, "access private method");
-    return method;
-  };
 
   // node_modules/jquery/dist/jquery.js
   var require_jquery = __commonJS({
@@ -118,23 +95,30 @@
           return new jQuery.fn.init(selector, context);
         };
         jQuery.fn = jQuery.prototype = {
+          // The current version of jQuery being used
           jquery: version,
           constructor: jQuery,
+          // The default length of a jQuery object is 0
           length: 0,
           toArray: function() {
             return slice2.call(this);
           },
+          // Get the Nth element in the matched element set OR
+          // Get the whole matched element set as a clean array
           get: function(num) {
             if (num == null) {
               return slice2.call(this);
             }
             return num < 0 ? this[num + this.length] : this[num];
           },
+          // Take an array of elements and push it onto the stack
+          // (returning the new matched element set)
           pushStack: function(elems) {
             var ret = jQuery.merge(this.constructor(), elems);
             ret.prevObject = this;
             return ret;
           },
+          // Execute a callback for every element in the matched set.
           each: function(callback) {
             return jQuery.each(this, callback);
           },
@@ -169,6 +153,8 @@
           end: function() {
             return this.prevObject || this.constructor();
           },
+          // For internal use only.
+          // Behaves like an Array's method, not like a jQuery method.
           push,
           sort: arr.sort,
           splice: arr.splice
@@ -214,7 +200,9 @@
           return target;
         };
         jQuery.extend({
+          // Unique for each copy of jQuery on the page
           expando: "jQuery" + (version + Math.random()).replace(/\D/g, ""),
+          // Assume jQuery is ready without the ready module
           isReady: true,
           error: function(msg) {
             throw new Error(msg);
@@ -240,6 +228,8 @@
             }
             return true;
           },
+          // Evaluates a script in a provided context; falls back to the global one
+          // if not specified.
           globalEval: function(code, options6, doc) {
             DOMEval(code, { nonce: options6 && options6.nonce }, doc);
           },
@@ -261,6 +251,7 @@
             }
             return obj;
           },
+          // Retrieve the text value of an array of DOM nodes
           text: function(elem) {
             var node, ret = "", i = 0, nodeType = elem.nodeType;
             if (!nodeType) {
@@ -279,6 +270,7 @@
             }
             return ret;
           },
+          // results is for internal usage only
           makeArray: function(arr2, results) {
             var ret = results || [];
             if (arr2 != null) {
@@ -300,6 +292,8 @@
             var namespace = elem && elem.namespaceURI, docElem = elem && (elem.ownerDocument || elem).documentElement;
             return !rhtmlSuffix.test(namespace || docElem && docElem.nodeName || "HTML");
           },
+          // Support: Android <=4.0 only, PhantomJS 1 only
+          // push.apply(_, arraylike) throws on ancient WebKit
           merge: function(first, second) {
             var len = +second.length, j = 0, i = first.length;
             for (; j < len; j++) {
@@ -318,6 +312,7 @@
             }
             return matches;
           },
+          // arg is for internal usage only
           map: function(elems, callback, arg) {
             var length, value, i = 0, ret = [];
             if (isArrayLike2(elems)) {
@@ -338,7 +333,10 @@
             }
             return flat(ret);
           },
+          // A global GUID counter for objects
           guid: 1,
+          // jQuery.support is not used in Core but other projects attach their
+          // properties to it so it needs to exist.
           support
         });
         if (typeof Symbol === "function") {
@@ -370,7 +368,9 @@
         );
         jQuery.contains = function(a2, b2) {
           var bup = b2 && b2.parentNode;
-          return a2 === bup || !!(bup && bup.nodeType === 1 && (a2.contains ? a2.contains(bup) : a2.compareDocumentPosition && a2.compareDocumentPosition(bup) & 16));
+          return a2 === bup || !!(bup && bup.nodeType === 1 && // Support: IE 9 - 11+
+          // IE doesn't have `contains` on SVG.
+          (a2.contains ? a2.contains(bup) : a2.compareDocumentPosition && a2.compareDocumentPosition(bup) & 16));
         };
         var rcssescape = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\x80-\uFFFF\w-]/g;
         function fcssescape(ch, asCodePoint) {
@@ -392,7 +392,9 @@
               hasDuplicate = true;
             }
             return 0;
-          }, booleans = "checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped", identifier = "(?:\\\\[\\da-fA-F]{1,6}" + whitespace + "?|\\\\[^\\r\\n\\f]|[\\w-]|[^\0-\\x7f])+", attributes = "\\[" + whitespace + "*(" + identifier + ")(?:" + whitespace + "*([*^$|!~]?=)" + whitespace + `*(?:'((?:\\\\.|[^\\\\'])*)'|"((?:\\\\.|[^\\\\"])*)"|(` + identifier + "))|)" + whitespace + "*\\]", pseudos = ":(" + identifier + `)(?:\\((('((?:\\\\.|[^\\\\'])*)'|"((?:\\\\.|[^\\\\"])*)")|((?:\\\\.|[^\\\\()[\\]]|` + attributes + ")*)|.*)\\)|)", rwhitespace = new RegExp(whitespace + "+", "g"), rcomma = new RegExp("^" + whitespace + "*," + whitespace + "*"), rleadingCombinator = new RegExp("^" + whitespace + "*([>+~]|" + whitespace + ")" + whitespace + "*"), rdescend = new RegExp(whitespace + "|>"), rpseudo = new RegExp(pseudos), ridentifier = new RegExp("^" + identifier + "$"), matchExpr = {
+          }, booleans = "checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped", identifier = "(?:\\\\[\\da-fA-F]{1,6}" + whitespace + "?|\\\\[^\\r\\n\\f]|[\\w-]|[^\0-\\x7f])+", attributes = "\\[" + whitespace + "*(" + identifier + ")(?:" + whitespace + // Operator (capture 2)
+          "*([*^$|!~]?=)" + whitespace + // "Attribute values must be CSS identifiers [capture 5] or strings [capture 3 or capture 4]"
+          `*(?:'((?:\\\\.|[^\\\\'])*)'|"((?:\\\\.|[^\\\\"])*)"|(` + identifier + "))|)" + whitespace + "*\\]", pseudos = ":(" + identifier + `)(?:\\((('((?:\\\\.|[^\\\\'])*)'|"((?:\\\\.|[^\\\\"])*)")|((?:\\\\.|[^\\\\()[\\]]|` + attributes + ")*)|.*)\\)|)", rwhitespace = new RegExp(whitespace + "+", "g"), rcomma = new RegExp("^" + whitespace + "*," + whitespace + "*"), rleadingCombinator = new RegExp("^" + whitespace + "*([>+~]|" + whitespace + ")" + whitespace + "*"), rdescend = new RegExp(whitespace + "|>"), rpseudo = new RegExp(pseudos), ridentifier = new RegExp("^" + identifier + "$"), matchExpr = {
             ID: new RegExp("^#(" + identifier + ")"),
             CLASS: new RegExp("^\\.(" + identifier + ")"),
             TAG: new RegExp("^(" + identifier + "|[*])"),
@@ -403,6 +405,8 @@
               "i"
             ),
             bool: new RegExp("^(?:" + booleans + ")$", "i"),
+            // For use in libraries implementing .is()
+            // We use this for POS matching in `select`
             needsContext: new RegExp("^" + whitespace + "*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(" + whitespace + "*((?:-\\d)?\\d*)" + whitespace + "*\\)|)(?=[^-]|$)", "i")
           }, rinputs = /^(?:input|select|textarea|button)$/i, rheader = /^h\d$/i, rquickExpr2 = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/, rsibling = /[+~]/, runescape = new RegExp("\\\\[\\da-fA-F]{1,6}" + whitespace + "?|\\\\([^\\r\\n\\f])", "g"), funescape = function(escape, nonHex) {
             var high = "0x" + escape.slice(1) - 65536;
@@ -560,7 +564,8 @@
                       return elem.disabled === disabled;
                     }
                   }
-                  return elem.isDisabled === disabled || elem.isDisabled !== !disabled && inDisabledFieldset(elem) === disabled;
+                  return elem.isDisabled === disabled || // Where there is no isDisabled, check manually
+                  elem.isDisabled !== !disabled && inDisabledFieldset(elem) === disabled;
                 }
                 return elem.disabled === disabled;
               } else if ("label" in elem) {
@@ -594,7 +599,11 @@
             documentElement2 = document3.documentElement;
             documentIsHTML = !jQuery.isXMLDoc(document3);
             matches = documentElement2.matches || documentElement2.webkitMatchesSelector || documentElement2.msMatchesSelector;
-            if (documentElement2.msMatchesSelector && preferredDoc != document3 && (subWindow = document3.defaultView) && subWindow.top !== subWindow) {
+            if (documentElement2.msMatchesSelector && // Support: IE 11+, Edge 17 - 18+
+            // IE/Edge sometimes throw a "Permission denied" error when strict-comparing
+            // two documents; shallow comparisons work.
+            // eslint-disable-next-line eqeqeq
+            preferredDoc != document3 && (subWindow = document3.defaultView) && subWindow.top !== subWindow) {
               subWindow.addEventListener("unload", unloadHandler);
             }
             support.getById = assert(function(el) {
@@ -712,7 +721,10 @@
               if (compare) {
                 return compare;
               }
-              compare = (a2.ownerDocument || a2) == (b2.ownerDocument || b2) ? a2.compareDocumentPosition(b2) : 1;
+              compare = (a2.ownerDocument || a2) == (b2.ownerDocument || b2) ? a2.compareDocumentPosition(b2) : (
+                // Otherwise we know they are disconnected
+                1
+              );
               if (compare & 1 || !support.sortDetached && b2.compareDocumentPosition(a2) === compare) {
                 if (a2 === document3 || a2.ownerDocument == preferredDoc && find.contains(preferredDoc, a2)) {
                   return -1;
@@ -734,7 +746,9 @@
             if (documentIsHTML && !nonnativeSelectorCache[expr + " "] && (!rbuggyQSA || !rbuggyQSA.test(expr))) {
               try {
                 var ret = matches.call(elem, expr);
-                if (ret || support.disconnectedMatch || elem.document && elem.document.nodeType !== 11) {
+                if (ret || support.disconnectedMatch || // As well, disconnected nodes are said to be in a document
+                // fragment in IE 9
+                elem.document && elem.document.nodeType !== 11) {
                   return ret;
                 }
               } catch (e) {
@@ -784,6 +798,7 @@
             return this.pushStack(jQuery.uniqueSort(slice2.apply(this)));
           };
           Expr = jQuery.expr = {
+            // Can be adjusted by the user
             cacheLength: 50,
             createPseudo: markFunction,
             match: matchExpr,
@@ -824,7 +839,9 @@
                 }
                 if (match[3]) {
                   match[2] = match[4] || match[5] || "";
-                } else if (unquoted && rpseudo.test(unquoted) && (excess = tokenize(unquoted, true)) && (excess = unquoted.indexOf(")", unquoted.length - excess) - unquoted.length)) {
+                } else if (unquoted && rpseudo.test(unquoted) && // Get excess from tokenize (recursively)
+                (excess = tokenize(unquoted, true)) && // advance to the next closing parenthesis
+                (excess = unquoted.indexOf(")", unquoted.length - excess) - unquoted.length)) {
                   match[0] = match[0].slice(0, excess);
                   match[2] = unquoted.slice(0, excess);
                 }
@@ -884,9 +901,12 @@
               },
               CHILD: function(type, what, _argument, first, last3) {
                 var simple = type.slice(0, 3) !== "nth", forward = type.slice(-4) !== "last", ofType = what === "of-type";
-                return first === 1 && last3 === 0 ? function(elem) {
-                  return !!elem.parentNode;
-                } : function(elem, _context, xml) {
+                return first === 1 && last3 === 0 ? (
+                  // Shortcut for :nth-*(n)
+                  function(elem) {
+                    return !!elem.parentNode;
+                  }
+                ) : function(elem, _context, xml) {
                   var cache, outerCache, node, nodeIndex, start19, dir2 = simple !== forward ? "nextSibling" : "previousSibling", parent = elem.parentNode, name2 = ofType && elem.nodeName.toLowerCase(), useCache = !xml && !ofType, diff = false;
                   if (parent) {
                     if (simple) {
@@ -908,7 +928,8 @@
                       nodeIndex = cache[0] === dirruns && cache[1];
                       diff = nodeIndex && cache[2];
                       node = nodeIndex && parent.childNodes[nodeIndex];
-                      while (node = ++nodeIndex && node && node[dir2] || (diff = nodeIndex = 0) || start19.pop()) {
+                      while (node = ++nodeIndex && node && node[dir2] || // Fallback to seeking `elem` from the start
+                      (diff = nodeIndex = 0) || start19.pop()) {
                         if (node.nodeType === 1 && ++diff && node === elem) {
                           outerCache[type] = [dirruns, nodeIndex, diff];
                           break;
@@ -961,6 +982,7 @@
               }
             },
             pseudos: {
+              // Potentially complex pseudos
               not: markFunction(function(selector) {
                 var input = [], results = [], matcher = compile(selector.replace(rtrimCSS, "$1"));
                 return matcher[expando] ? markFunction(function(seed, matches2, _context, xml) {
@@ -988,6 +1010,13 @@
                   return (elem.textContent || jQuery.text(elem)).indexOf(text) > -1;
                 };
               }),
+              // "Whether an element is represented by a :lang() selector
+              // is based solely on the element's language value
+              // being equal to the identifier C,
+              // or beginning with the identifier C immediately followed by "-".
+              // The matching of C against the element's language value is performed case-insensitively.
+              // The identifier C does not have to be a valid language name."
+              // https://www.w3.org/TR/selectors/#lang-pseudo
               lang: markFunction(function(lang) {
                 if (!ridentifier.test(lang || "")) {
                   find.error("unsupported lang: " + lang);
@@ -1004,6 +1033,7 @@
                   return false;
                 };
               }),
+              // Miscellaneous
               target: function(elem) {
                 var hash2 = window2.location && window2.location.hash;
                 return hash2 && hash2.slice(1) === elem.id;
@@ -1014,6 +1044,7 @@
               focus: function(elem) {
                 return elem === safeActiveElement() && document3.hasFocus() && !!(elem.type || elem.href || ~elem.tabIndex);
               },
+              // Boolean properties
               enabled: createDisabledPseudo(false),
               disabled: createDisabledPseudo(true),
               checked: function(elem) {
@@ -1025,6 +1056,7 @@
                 }
                 return elem.selected === true;
               },
+              // Contents
               empty: function(elem) {
                 for (elem = elem.firstChild; elem; elem = elem.nextSibling) {
                   if (elem.nodeType < 6) {
@@ -1036,6 +1068,7 @@
               parent: function(elem) {
                 return !Expr.pseudos.empty(elem);
               },
+              // Element/input types
               header: function(elem) {
                 return rheader.test(elem.nodeName);
               },
@@ -1047,8 +1080,12 @@
               },
               text: function(elem) {
                 var attr;
-                return nodeName(elem, "input") && elem.type === "text" && ((attr = elem.getAttribute("type")) == null || attr.toLowerCase() === "text");
+                return nodeName(elem, "input") && elem.type === "text" && // Support: IE <10 only
+                // New HTML5 attribute values (e.g., "search") appear
+                // with elem.type === "text"
+                ((attr = elem.getAttribute("type")) == null || attr.toLowerCase() === "text");
               },
+              // Position-in-collection
               first: createPositionalPseudo(function() {
                 return [0];
               }),
@@ -1126,6 +1163,7 @@
                 matched = match.shift();
                 tokens.push({
                   value: matched,
+                  // Cast descendant combinators to space
                   type: match[0].replace(rtrimCSS, " ")
                 });
                 soFar = soFar.slice(matched.length);
@@ -1148,7 +1186,10 @@
             if (parseOnly) {
               return soFar.length;
             }
-            return soFar ? find.error(selector) : tokenCache(selector, groups).slice(0);
+            return soFar ? find.error(selector) : (
+              // Cache the tokens
+              tokenCache(selector, groups).slice(0)
+            );
           }
           function toSelector(tokens) {
             var i2 = 0, len = tokens.length, selector = "";
@@ -1159,42 +1200,48 @@
           }
           function addCombinator(matcher, combinator, base) {
             var dir2 = combinator.dir, skip = combinator.next, key = skip || dir2, checkNonElements = base && key === "parentNode", doneName = done++;
-            return combinator.first ? function(elem, context, xml) {
-              while (elem = elem[dir2]) {
-                if (elem.nodeType === 1 || checkNonElements) {
-                  return matcher(elem, context, xml);
-                }
-              }
-              return false;
-            } : function(elem, context, xml) {
-              var oldCache, outerCache, newCache = [dirruns, doneName];
-              if (xml) {
+            return combinator.first ? (
+              // Check against closest ancestor/preceding element
+              function(elem, context, xml) {
                 while (elem = elem[dir2]) {
                   if (elem.nodeType === 1 || checkNonElements) {
-                    if (matcher(elem, context, xml)) {
-                      return true;
-                    }
+                    return matcher(elem, context, xml);
                   }
                 }
-              } else {
-                while (elem = elem[dir2]) {
-                  if (elem.nodeType === 1 || checkNonElements) {
-                    outerCache = elem[expando] || (elem[expando] = {});
-                    if (skip && nodeName(elem, skip)) {
-                      elem = elem[dir2] || elem;
-                    } else if ((oldCache = outerCache[key]) && oldCache[0] === dirruns && oldCache[1] === doneName) {
-                      return newCache[2] = oldCache[2];
-                    } else {
-                      outerCache[key] = newCache;
-                      if (newCache[2] = matcher(elem, context, xml)) {
+                return false;
+              }
+            ) : (
+              // Check against all ancestor/preceding elements
+              function(elem, context, xml) {
+                var oldCache, outerCache, newCache = [dirruns, doneName];
+                if (xml) {
+                  while (elem = elem[dir2]) {
+                    if (elem.nodeType === 1 || checkNonElements) {
+                      if (matcher(elem, context, xml)) {
                         return true;
                       }
                     }
                   }
+                } else {
+                  while (elem = elem[dir2]) {
+                    if (elem.nodeType === 1 || checkNonElements) {
+                      outerCache = elem[expando] || (elem[expando] = {});
+                      if (skip && nodeName(elem, skip)) {
+                        elem = elem[dir2] || elem;
+                      } else if ((oldCache = outerCache[key]) && oldCache[0] === dirruns && oldCache[1] === doneName) {
+                        return newCache[2] = oldCache[2];
+                      } else {
+                        outerCache[key] = newCache;
+                        if (newCache[2] = matcher(elem, context, xml)) {
+                          return true;
+                        }
+                      }
+                    }
+                  }
                 }
+                return false;
               }
-              return false;
-            };
+            );
           }
           function elementMatcher(matchers) {
             return matchers.length > 1 ? function(elem, context, xml) {
@@ -1242,7 +1289,13 @@
                 []
               ), matcherIn = preFilter && (seed || !selector) ? condense(elems, preMap, preFilter, context, xml) : elems;
               if (matcher) {
-                matcherOut = postFinder || (seed ? preFilter : preexisting || postFilter) ? [] : results;
+                matcherOut = postFinder || (seed ? preFilter : preexisting || postFilter) ? (
+                  // ...intermediate processing is necessary
+                  []
+                ) : (
+                  // ...otherwise use results directly
+                  results
+                );
                 matcher(matcherIn, matcherOut, context, xml);
               } else {
                 matcherOut = matcherIn;
@@ -1313,6 +1366,7 @@
                   return setMatcher(
                     i2 > 1 && elementMatcher(matchers),
                     i2 > 1 && toSelector(
+                      // If the preceding token was a descendant combinator, insert an implicit any-element `*`
                       tokens.slice(0, i2 - 1).concat({ value: tokens[i2 - 2].type === " " ? "*" : "" })
                     ).replace(rtrimCSS, "$1"),
                     matcher,
@@ -1557,6 +1611,8 @@
           is: function(selector) {
             return !!winnow(
               this,
+              // If this is a positional/relative selector, check membership in the returned set
+              // so $("p:first").is("p:last") won't return true for a doc with two "p".
               typeof selector === "string" && rneedsContext.test(selector) ? jQuery(selector) : selector || [],
               false
             ).length;
@@ -1610,7 +1666,10 @@
             this.length = 1;
             return this;
           } else if (isFunction(selector)) {
-            return root2.ready !== void 0 ? root2.ready(selector) : selector(jQuery);
+            return root2.ready !== void 0 ? root2.ready(selector) : (
+              // Execute immediately if ready is not present
+              selector(jQuery)
+            );
           }
           return jQuery.makeArray(selector, this);
         };
@@ -1639,7 +1698,10 @@
             if (!rneedsContext.test(selectors)) {
               for (; i < l; i++) {
                 for (cur = this[i]; cur && cur !== context; cur = cur.parentNode) {
-                  if (cur.nodeType < 11 && (targets ? targets.index(cur) > -1 : cur.nodeType === 1 && jQuery.find.matchesSelector(cur, selectors))) {
+                  if (cur.nodeType < 11 && (targets ? targets.index(cur) > -1 : (
+                    // Don't pass non-elements to jQuery#find
+                    cur.nodeType === 1 && jQuery.find.matchesSelector(cur, selectors)
+                  ))) {
                     matched.push(cur);
                     break;
                   }
@@ -1648,6 +1710,7 @@
             }
             return this.pushStack(matched.length > 1 ? jQuery.uniqueSort(matched) : matched);
           },
+          // Determine the position of an element within the set
           index: function(elem) {
             if (!elem) {
               return this[0] && this[0].parentNode ? this.first().prevAll().length : -1;
@@ -1657,6 +1720,7 @@
             }
             return indexOf.call(
               this,
+              // If it receives a jQuery object, the first element is used
               elem.jquery ? elem[0] : elem
             );
           },
@@ -1714,7 +1778,10 @@
             return siblings(elem.firstChild);
           },
           contents: function(elem) {
-            if (elem.contentDocument != null && getProto(elem.contentDocument)) {
+            if (elem.contentDocument != null && // Support: IE 11+
+            // <object> elements with no `data` attribute has an object
+            // `contentDocument` with a `null` prototype.
+            getProto(elem.contentDocument)) {
               return elem.contentDocument;
             }
             if (nodeName(elem, "template")) {
@@ -1776,6 +1843,7 @@
               }
             }
           }, self2 = {
+            // Add a callback or a collection of callbacks to the list
             add: function() {
               if (list2) {
                 if (memory && !firing) {
@@ -1799,6 +1867,7 @@
               }
               return this;
             },
+            // Remove a callback from the list
             remove: function() {
               jQuery.each(arguments, function(_2, arg) {
                 var index2;
@@ -1811,15 +1880,21 @@
               });
               return this;
             },
+            // Check if a given callback is in the list.
+            // If no argument is given, return whether or not list has callbacks attached.
             has: function(fn) {
               return fn ? jQuery.inArray(fn, list2) > -1 : list2.length > 0;
             },
+            // Remove all callbacks from the list
             empty: function() {
               if (list2) {
                 list2 = [];
               }
               return this;
             },
+            // Disable .fire and .add
+            // Abort any current/pending executions
+            // Clear all callbacks and values
             disable: function() {
               locked = queue = [];
               list2 = memory = "";
@@ -1828,6 +1903,9 @@
             disabled: function() {
               return !list2;
             },
+            // Disable .fire
+            // Also disable .add unless we have memory (since it would have no effect)
+            // Abort any pending executions
             lock: function() {
               locked = queue = [];
               if (!memory && !firing) {
@@ -1838,6 +1916,7 @@
             locked: function() {
               return !!locked;
             },
+            // Call all callbacks with the given context and arguments
             fireWith: function(context, args) {
               if (!locked) {
                 args = args || [];
@@ -1849,10 +1928,12 @@
               }
               return this;
             },
+            // Call all the callbacks with the given arguments
             fire: function() {
               self2.fireWith(this, arguments);
               return this;
             },
+            // To know if the callbacks have already been called at least once
             fired: function() {
               return !!fired;
             }
@@ -1882,6 +1963,8 @@
         jQuery.extend({
           Deferred: function(func) {
             var tuples = [
+              // action, add listener, callbacks,
+              // ... .then handlers, argument index, [final state]
               [
                 "notify",
                 "progress",
@@ -1916,6 +1999,7 @@
               "catch": function(fn) {
                 return promise.then(null, fn);
               },
+              // Keep pipe for back-compat
               pipe: function() {
                 var fns = arguments;
                 return jQuery.Deferred(function(newDefer) {
@@ -1949,7 +2033,10 @@
                       if (returned === deferred2.promise()) {
                         throw new TypeError("Thenable self-resolution");
                       }
-                      then = returned && (typeof returned === "object" || typeof returned === "function") && returned.then;
+                      then = returned && // Support: Promises/A+ section 2.3.4
+                      // https://promisesaplus.com/#point-64
+                      // Only check objects and functions for thenability
+                      (typeof returned === "object" || typeof returned === "function") && returned.then;
                       if (isFunction(then)) {
                         if (special) {
                           then.call(
@@ -2034,6 +2121,8 @@
                   );
                 }).promise();
               },
+              // Get a promise for this deferred
+              // If obj is provided, the promise aspect is added to the object
               promise: function(obj) {
                 return obj != null ? jQuery.extend(obj, promise) : promise;
               }
@@ -2046,9 +2135,15 @@
                   function() {
                     state = stateString;
                   },
+                  // rejected_callbacks.disable
+                  // fulfilled_callbacks.disable
                   tuples[3 - i][2].disable,
+                  // rejected_handlers.disable
+                  // fulfilled_handlers.disable
                   tuples[3 - i][3].disable,
+                  // progress_callbacks.lock
                   tuples[0][2].lock,
+                  // progress_handlers.lock
                   tuples[0][3].lock
                 );
               }
@@ -2065,6 +2160,7 @@
             }
             return deferred;
           },
+          // Deferred helper
           when: function(singleValue) {
             var remaining = arguments.length, i = remaining, resolveContexts = Array(i), resolveValues = slice2.call(arguments), primary = jQuery.Deferred(), updateFunc = function(i2) {
               return function(value) {
@@ -2115,8 +2211,12 @@
           return this;
         };
         jQuery.extend({
+          // Is the DOM ready to be used? Set to true once it occurs.
           isReady: false,
+          // A counter to track how many items to wait for before
+          // the ready event fires. See trac-6781
           readyWait: 1,
+          // Handle when the DOM is ready
           ready: function(wait) {
             if (wait === true ? --jQuery.readyWait : jQuery.isReady) {
               return;
@@ -2225,7 +2325,10 @@
             return cache;
           },
           get: function(owner, key) {
-            return key === void 0 ? this.cache(owner) : owner[this.expando] && owner[this.expando][camelCase(key)];
+            return key === void 0 ? this.cache(owner) : (
+              // Always use camelCase key (gh-2257)
+              owner[this.expando] && owner[this.expando][camelCase(key)]
+            );
           },
           access: function(owner, key, value) {
             if (key === void 0 || key && typeof key === "string" && value === void 0) {
@@ -2312,6 +2415,8 @@
           removeData: function(elem, name2) {
             dataUser.remove(elem, name2);
           },
+          // TODO: Now that all calls to _data and _removeData have been replaced
+          // with direct calls to dataPriv methods, these can be deprecated.
           _data: function(elem, name2, data) {
             return dataPriv.access(elem, name2, data);
           },
@@ -2406,6 +2511,7 @@
               hooks.empty.fire();
             }
           },
+          // Not public - generate a queueHooks object, or return the current one
           _queueHooks: function(elem, type) {
             var key = type + "queueHooks";
             return dataPriv.get(elem, key) || dataPriv.access(elem, key, {
@@ -2442,6 +2548,8 @@
           clearQueue: function(type) {
             return this.queue(type || "fx", []);
           },
+          // Get a promise resolved when queues of a certain type
+          // are emptied (fx is the type by default)
           promise: function(type, obj) {
             var tmp, count2 = 1, defer = jQuery.Deferred(), elements = this, i = this.length, resolve = function() {
               if (!--count2) {
@@ -2478,7 +2586,11 @@
         }
         var isHiddenWithinTree = function(elem, el) {
           elem = el || elem;
-          return elem.style.display === "none" || elem.style.display === "" && isAttached(elem) && jQuery.css(elem, "display") === "none";
+          return elem.style.display === "none" || elem.style.display === "" && // Otherwise, check computed style
+          // Support: Firefox <=43 - 45
+          // Disconnected elements can have computed display: none, so first confirm that elem is
+          // in the document.
+          isAttached(elem) && jQuery.css(elem, "display") === "none";
         };
         function adjustCSS(elem, prop, valueParts, tween2) {
           var adjusted, scale, maxIterations = 20, currentValue = tween2 ? function() {
@@ -2595,6 +2707,9 @@
           support.option = !!div.lastChild;
         })();
         var wrapMap = {
+          // XHTML parsers do not magically insert elements in the
+          // same way that tag soup parsers do. So we cannot shorten
+          // this by omitting <tbody> or other required elements.
           thead: [1, "<table>", "</table>"],
           col: [2, "<table><colgroup>", "</colgroup></table>"],
           tr: [2, "<table><tbody>", "</tbody></table>"],
@@ -2800,6 +2915,7 @@
               jQuery.event.global[type] = true;
             }
           },
+          // Detach an event or set of events from an element
           remove: function(elem, types2, handler, selector, mappedTypes) {
             var j, origCount, tmp, events, t, handleObj, special, handlers, type, namespaces, origType, elemData = dataPriv.hasData(elem) && dataPriv.get(elem);
             if (!elemData || !(events = elemData.events)) {
@@ -2881,7 +2997,14 @@
           },
           handlers: function(event, handlers) {
             var i, handleObj, sel, matchedHandlers, matchedSelectors, handlerQueue = [], delegateCount = handlers.delegateCount, cur = event.target;
-            if (delegateCount && cur.nodeType && !(event.type === "click" && event.button >= 1)) {
+            if (delegateCount && // Support: IE <=9
+            // Black-hole SVG <use> instance trees (trac-13180)
+            cur.nodeType && // Support: Firefox <=42
+            // Suppress spec-violating clicks indicating a non-primary pointer button (trac-3861)
+            // https://www.w3.org/TR/DOM-Level-3-Events/#event-type-click
+            // Support: IE 11 only
+            // ...but not arrow key "clicks" of radio inputs, which can have `button` -1 (gh-2343)
+            !(event.type === "click" && event.button >= 1)) {
               for (; cur !== this; cur = cur.parentNode || this) {
                 if (cur.nodeType === 1 && !(event.type === "click" && cur.disabled === true)) {
                   matchedHandlers = [];
@@ -2936,9 +3059,11 @@
           },
           special: {
             load: {
+              // Prevent triggered image.load events from bubbling to window.load
               noBubble: true
             },
             click: {
+              // Utilize native event to ensure correct state for checkable inputs
               setup: function(data) {
                 var el = this || data;
                 if (rcheckableType.test(el.type) && el.click && nodeName(el, "input")) {
@@ -2953,6 +3078,8 @@
                 }
                 return true;
               },
+              // For cross-browser consistency, suppress native .click() on links
+              // Also prevent it if we're currently inside a leveraged native-event stack
               _default: function(event) {
                 var target = event.target;
                 return rcheckableType.test(target.type) && target.click && nodeName(target, "input") && dataPriv.get(target, "click") || nodeName(target, "a");
@@ -3018,7 +3145,8 @@
           if (src && src.type) {
             this.originalEvent = src;
             this.type = src.type;
-            this.isDefaultPrevented = src.defaultPrevented || src.defaultPrevented === void 0 && src.returnValue === false ? returnTrue : returnFalse;
+            this.isDefaultPrevented = src.defaultPrevented || src.defaultPrevented === void 0 && // Support: Android <=2.3 only
+            src.returnValue === false ? returnTrue : returnFalse;
             this.target = src.target && src.target.nodeType === 3 ? src.target.parentNode : src.target;
             this.currentTarget = src.currentTarget;
             this.relatedTarget = src.relatedTarget;
@@ -3112,6 +3240,7 @@
             }
           }
           jQuery.event.special[type] = {
+            // Utilize native event if possible so blur/focus sequence is correct
             setup: function() {
               var attaches;
               leverageNative(this, type, true);
@@ -3143,6 +3272,8 @@
                 return false;
               }
             },
+            // Suppress native focus or blur if we're currently inside
+            // a leveraged native-event stack
             _default: function(event) {
               return dataPriv.get(event.target, type);
             },
@@ -3592,6 +3723,15 @@
               computeStyleTests();
               return scrollboxSizeVal;
             },
+            // Support: IE 9 - 11+, Edge 15 - 18+
+            // IE/Edge misreport `getComputedStyle` of table rows with width/height
+            // set in CSS while `offset*` properties report correct values.
+            // Behavior in IE 9 is more subtle than in newer versions & it passes
+            // some versions of this test; make sure not to make it pass there!
+            //
+            // Support: Firefox 70+
+            // Only Firefox includes border widths
+            // in computed dimensions. (gh-4529)
             reliableTrDimensions: function() {
               var table, tr, trChild, trStyle;
               if (reliableTrDimensionsVal == null) {
@@ -3634,7 +3774,11 @@
               style.maxWidth = maxWidth;
             }
           }
-          return ret !== void 0 ? ret + "" : ret;
+          return ret !== void 0 ? (
+            // Support: IE <=9 - 11 only
+            // IE returns zIndex value as an integer.
+            ret + ""
+          ) : ret;
         }
         function addGetHookIf(conditionFn, hookFn) {
           return {
@@ -3673,7 +3817,10 @@
         };
         function setPositiveNumber(_elem, value, subtract) {
           var matches = rcssNum.exec(value);
-          return matches ? Math.max(0, matches[2] - (subtract || 0)) + (matches[3] || "px") : value;
+          return matches ? (
+            // Guard against undefined "subtract", e.g., when used as in cssHooks
+            Math.max(0, matches[2] - (subtract || 0)) + (matches[3] || "px")
+          ) : value;
         }
         function boxModelAdjustment(elem, dimension, box, isBorderBox, styles, computedVal) {
           var i = dimension === "width" ? 1 : 0, extra = 0, delta = 0, marginDelta = 0;
@@ -3703,6 +3850,8 @@
           if (!isBorderBox && computedVal >= 0) {
             delta += Math.max(0, Math.ceil(
               elem["offset" + dimension[0].toUpperCase() + dimension.slice(1)] - computedVal - delta - extra - 0.5
+              // If offsetWidth/offsetHeight is unknown, then we can't determine content-box scroll gutter
+              // Use an explicit zero to avoid NaN (gh-3964)
             )) || 0;
           }
           return delta + marginDelta;
@@ -3715,7 +3864,16 @@
             }
             val = "auto";
           }
-          if ((!support.boxSizingReliable() && isBorderBox || !support.reliableTrDimensions() && nodeName(elem, "tr") || val === "auto" || !parseFloat(val) && jQuery.css(elem, "display", false, styles) === "inline") && elem.getClientRects().length) {
+          if ((!support.boxSizingReliable() && isBorderBox || // Support: IE 10 - 11+, Edge 15 - 18+
+          // IE/Edge misreport `getComputedStyle` of table rows with width/height
+          // set in CSS while `offset*` properties report correct values.
+          // Interestingly, in some cases IE 9 doesn't suffer from this issue.
+          !support.reliableTrDimensions() && nodeName(elem, "tr") || // Fall back to offsetWidth/offsetHeight when value is "auto"
+          // This happens for inline elements with no explicit setting (gh-3571)
+          val === "auto" || // Support: Android <=4.1 - 4.3 only
+          // Also use offsetWidth/offsetHeight for misreported inline dimensions (gh-3602)
+          !parseFloat(val) && jQuery.css(elem, "display", false, styles) === "inline") && // Make sure the element is visible & connected
+          elem.getClientRects().length) {
             isBorderBox = jQuery.css(elem, "boxSizing", false, styles) === "border-box";
             valueIsBorderBox = offsetProp in elem;
             if (valueIsBorderBox) {
@@ -3729,10 +3887,13 @@
             extra || (isBorderBox ? "border" : "content"),
             valueIsBorderBox,
             styles,
+            // Provide the current computed size to request scroll gutter calculation (gh-3589)
             val
           ) + "px";
         }
         jQuery.extend({
+          // Add in style property hooks for overriding the default
+          // behavior of getting and setting a style property
           cssHooks: {
             opacity: {
               get: function(elem, computed) {
@@ -3743,6 +3904,7 @@
               }
             }
           },
+          // Don't automatically add "px" to these possibly-unitless properties
           cssNumber: {
             animationIterationCount: true,
             aspectRatio: true,
@@ -3766,13 +3928,17 @@
             widows: true,
             zIndex: true,
             zoom: true,
+            // SVG-related
             fillOpacity: true,
             floodOpacity: true,
             stopOpacity: true,
             strokeMiterlimit: true,
             strokeOpacity: true
           },
+          // Add in properties whose names you wish to fix before
+          // setting or getting the value
           cssProps: {},
+          // Get and set the style property on a DOM Node
           style: function(elem, name2, value, extra) {
             if (!elem || elem.nodeType === 3 || elem.nodeType === 8 || !elem.style) {
               return;
@@ -3837,7 +4003,13 @@
           jQuery.cssHooks[dimension] = {
             get: function(elem, computed, extra) {
               if (computed) {
-                return rdisplayswap.test(jQuery.css(elem, "display")) && (!elem.getClientRects().length || !elem.getBoundingClientRect().width) ? swap(elem, cssShow, function() {
+                return rdisplayswap.test(jQuery.css(elem, "display")) && // Support: Safari 8+
+                // Table columns in Safari have non-zero offsetWidth & zero
+                // getBoundingClientRect().width unless display is changed.
+                // Support: IE <=11 only
+                // Running getBoundingClientRect on a disconnected node
+                // in IE throws an error.
+                (!elem.getClientRects().length || !elem.getBoundingClientRect().width) ? swap(elem, cssShow, function() {
                   return getWidthOrHeight(elem, dimension, extra);
                 }) : getWidthOrHeight(elem, dimension, extra);
               }
@@ -4452,6 +4624,7 @@
         jQuery.fx.speeds = {
           slow: 600,
           fast: 200,
+          // Default speed
           _default: 400
         };
         jQuery.fn.delay = function(time, type) {
@@ -4821,7 +4994,13 @@
             option: {
               get: function(elem) {
                 var val = jQuery.find.attr(elem, "value");
-                return val != null ? val : stripAndCollapse(jQuery.text(elem));
+                return val != null ? val : (
+                  // Support: IE <=10 - 11 only
+                  // option.text throws exceptions (trac-14686, trac-14858)
+                  // Strip and collapse whitespace
+                  // https://html.spec.whatwg.org/#strip-and-collapse-whitespace
+                  stripAndCollapse(jQuery.text(elem))
+                );
               }
             },
             select: {
@@ -4834,7 +5013,8 @@
                 }
                 for (; i < max5; i++) {
                   option = options6[i];
-                  if ((option.selected || i === index2) && !option.disabled && (!option.parentNode.disabled || !nodeName(option.parentNode, "optgroup"))) {
+                  if ((option.selected || i === index2) && // Don't return options that are disabled or in a disabled optgroup
+                  !option.disabled && (!option.parentNode.disabled || !nodeName(option.parentNode, "optgroup"))) {
                     value = jQuery(option).val();
                     if (one) {
                       return value;
@@ -4980,6 +5160,8 @@
             }
             return event.result;
           },
+          // Piggyback on a donor event to simulate a different one
+          // Used only for `focus(in | out)` events
           simulate: function(type, elem, event) {
             var e = jQuery.extend(
               new jQuery.Event(),
@@ -5221,7 +5403,9 @@
           return { state: "success", data: response };
         }
         jQuery.extend({
+          // Counter for holding the number of active queries
           active: 0,
+          // Last-Modified header cache for next request
           lastModified: {},
           etag: {},
           ajaxSettings: {
@@ -5232,6 +5416,17 @@
             processData: true,
             async: true,
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            /*
+            timeout: 0,
+            data: null,
+            dataType: null,
+            username: null,
+            password: null,
+            cache: null,
+            throws: false,
+            traditional: false,
+            headers: {},
+            */
             accepts: {
               "*": allTypes,
               text: "text/plain",
@@ -5249,22 +5444,42 @@
               text: "responseText",
               json: "responseJSON"
             },
+            // Data converters
+            // Keys separate source (or catchall "*") and destination types with a single space
             converters: {
+              // Convert anything to text
               "* text": String,
+              // Text to html (true = no transformation)
               "text html": true,
+              // Evaluate text as a json expression
               "text json": JSON.parse,
+              // Parse text as xml
               "text xml": jQuery.parseXML
             },
+            // For options that shouldn't be deep extended:
+            // you can add your own custom options here if
+            // and when you create one that shouldn't be
+            // deep extended (see ajaxExtend)
             flatOptions: {
               url: true,
               context: true
             }
           },
+          // Creates a full fledged settings object into target
+          // with both ajaxSettings and settings fields.
+          // If target is omitted, writes into ajaxSettings.
           ajaxSetup: function(target, settings) {
-            return settings ? ajaxExtend(ajaxExtend(target, jQuery.ajaxSettings), settings) : ajaxExtend(jQuery.ajaxSettings, target);
+            return settings ? (
+              // Building a settings object
+              ajaxExtend(ajaxExtend(target, jQuery.ajaxSettings), settings)
+            ) : (
+              // Extending ajaxSettings
+              ajaxExtend(jQuery.ajaxSettings, target)
+            );
           },
           ajaxPrefilter: addToPrefiltersOrTransports(prefilters),
           ajaxTransport: addToPrefiltersOrTransports(transports),
+          // Main method
           ajax: function(url2, options6) {
             if (typeof url2 === "object") {
               options6 = url2;
@@ -5273,6 +5488,7 @@
             options6 = options6 || {};
             var transport, cacheURL, responseHeadersString, responseHeaders, timeoutTimer, urlAnchor, completed2, fireGlobals, i, uncached, s = jQuery.ajaxSetup({}, options6), callbackContext = s.context || s, globalEventContext = s.context && (callbackContext.nodeType || callbackContext.jquery) ? jQuery(callbackContext) : jQuery.event, deferred = jQuery.Deferred(), completeDeferred = jQuery.Callbacks("once memory"), statusCode = s.statusCode || {}, requestHeaders = {}, requestHeadersNames = {}, strAbort = "canceled", jqXHR = {
               readyState: 0,
+              // Builds headers hashtable if needed
               getResponseHeader: function(key) {
                 var match;
                 if (completed2) {
@@ -5286,9 +5502,11 @@
                 }
                 return match == null ? null : match.join(", ");
               },
+              // Raw string
               getAllResponseHeaders: function() {
                 return completed2 ? responseHeadersString : null;
               },
+              // Caches the header
               setRequestHeader: function(name2, value) {
                 if (completed2 == null) {
                   name2 = requestHeadersNames[name2.toLowerCase()] = requestHeadersNames[name2.toLowerCase()] || name2;
@@ -5296,12 +5514,14 @@
                 }
                 return this;
               },
+              // Overrides response content-type header
               overrideMimeType: function(type) {
                 if (completed2 == null) {
                   s.mimeType = type;
                 }
                 return this;
               },
+              // Status-dependent callbacks
               statusCode: function(map3) {
                 var code;
                 if (map3) {
@@ -5315,6 +5535,7 @@
                 }
                 return this;
               },
+              // Cancel the request
               abort: function(statusText) {
                 var finalText = statusText || strAbort;
                 if (transport) {
@@ -5527,11 +5748,15 @@
         jQuery._evalUrl = function(url2, options6, doc) {
           return jQuery.ajax({
             url: url2,
+            // Make this explicit, since user can override this through ajaxSetup (trac-11264)
             type: "GET",
             dataType: "script",
             cache: true,
             async: false,
             global: false,
+            // Only evaluate the response if it is successful (gh-4126)
+            // dataFilter is not invoked for failure responses, so using it instead
+            // of the default converter is kludgy but it works.
             converters: {
               "text script": function() {
               }
@@ -5603,7 +5828,10 @@
           }
         };
         var xhrSuccessStatus = {
+          // File protocol always yields status code 0, assume 200
           0: 200,
+          // Support: IE <=9 only
+          // trac-1450: sometimes IE returns 1223 when it should be 204
           1223: 204
         }, xhrSupported = jQuery.ajaxSettings.xhr();
         support.cors = !!xhrSupported && "withCredentials" in xhrSupported;
@@ -5646,6 +5874,7 @@
                           complete(0, "error");
                         } else {
                           complete(
+                            // File: protocol always yields status 0; see trac-8605, trac-14207
                             xhr2.status,
                             xhr2.statusText
                           );
@@ -5654,6 +5883,9 @@
                         complete(
                           xhrSuccessStatus[xhr2.status] || xhr2.status,
                           xhr2.statusText,
+                          // Support: IE <=9 only
+                          // IE9 has no XHR2 but throws on binary (trac-11426)
+                          // For XHR2 non-text, let the caller handle it (gh-2498)
                           (xhr2.responseType || "text") !== "text" || typeof xhr2.responseText !== "string" ? { binary: xhr2.response } : { text: xhr2.responseText },
                           xhr2.getAllResponseHeaders()
                         );
@@ -5789,11 +6021,11 @@
             return "script";
           }
         });
-        support.createHTMLDocument = function() {
+        support.createHTMLDocument = (function() {
           var body = document2.implementation.createHTMLDocument("").body;
           body.innerHTML = "<form></form><form></form>";
           return body.childNodes.length === 2;
-        }();
+        })();
         jQuery.parseHTML = function(data, context, keepScripts) {
           if (typeof data !== "string") {
             return [];
@@ -5839,12 +6071,22 @@
           if (self2.length > 0) {
             jQuery.ajax({
               url: url2,
+              // If "type" variable is undefined, then "GET" method will be used.
+              // Make value of this field explicit since
+              // user can override it through ajaxSetup method
               type: type || "GET",
               dataType: "html",
               data: params
             }).done(function(responseText) {
               response = arguments;
-              self2.html(selector ? jQuery("<div>").append(jQuery.parseHTML(responseText)).find(selector) : responseText);
+              self2.html(selector ? (
+                // If a selector was specified, locate the right elements in a dummy div
+                // Exclude scripts to avoid IE 'Permission Denied' errors
+                jQuery("<div>").append(jQuery.parseHTML(responseText)).find(selector)
+              ) : (
+                // Otherwise use the full result
+                responseText
+              ));
             }).always(callback && function(jqXHR, status) {
               self2.each(function() {
                 callback.apply(this, response || [jqXHR.responseText, status, jqXHR]);
@@ -5893,6 +6135,7 @@
           }
         };
         jQuery.fn.extend({
+          // offset() relates an element's border box to the document origin
           offset: function(options6) {
             if (arguments.length) {
               return options6 === void 0 ? this : this.each(function(i) {
@@ -5913,6 +6156,8 @@
               left: rect.left + win.pageXOffset
             };
           },
+          // position() relates an element's margin box to its offset parent's padding box
+          // This corresponds to the behavior of CSS absolute positioning
           position: function() {
             if (!this[0]) {
               return;
@@ -5938,6 +6183,16 @@
               left: offset.left - parentOffset.left - jQuery.css(elem, "marginLeft", true)
             };
           },
+          // This method will return documentElement in the following cases:
+          // 1) For the element inside the iframe without offsetParent, this method will return
+          //    documentElement of the parent window
+          // 2) For the hidden or detached element
+          // 3) For body or html element, i.e. in case of the html node - it will return itself
+          //
+          // but those exceptions were never presented as a real life use-cases
+          // and might be considered as more preferable results.
+          //
+          // This logic, however, is not guaranteed and can change at any point in the future
           offsetParent: function() {
             return this.map(function() {
               var offsetParent = this.offsetParent;
@@ -6006,7 +6261,13 @@
                     doc["client" + name2]
                   );
                 }
-                return value2 === void 0 ? jQuery.css(elem, type2, extra) : jQuery.style(elem, type2, value2, extra);
+                return value2 === void 0 ? (
+                  // Get width or height on the element, requesting but not forcing parseFloat
+                  jQuery.css(elem, type2, extra)
+                ) : (
+                  // Set width or height on the element
+                  jQuery.style(elem, type2, value2, extra)
+                );
               }, type, chainable ? margin : void 0, chainable);
             };
           });
@@ -6083,7 +6344,10 @@
         jQuery.now = Date.now;
         jQuery.isNumeric = function(obj) {
           var type = jQuery.type(obj);
-          return (type === "number" || type === "string") && !isNaN(obj - parseFloat(obj));
+          return (type === "number" || type === "string") && // parseFloat NaNs numeric-cast false positives ("")
+          // ...but misinterprets leading-number strings, particularly hex literals ("0x...")
+          // subtraction forces infinities to NaN
+          !isNaN(obj - parseFloat(obj));
         };
         jQuery.trim = function(text) {
           return text == null ? "" : (text + "").replace(rtrim, "$1");
@@ -6176,13 +6440,13 @@
 
   // node_modules/two.js/build/two.module.js
   var __defProp2 = Object.defineProperty;
-  var __defNormalProp2 = (obj, key, value) => key in obj ? __defProp2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
   var __export = (target, all) => {
     for (var name2 in all)
       __defProp2(target, name2, { get: all[name2], enumerable: true });
   };
-  var __publicField2 = (obj, key, value) => {
-    __defNormalProp2(obj, typeof key !== "symbol" ? key + "" : key, value);
+  var __publicField = (obj, key, value) => {
+    __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
     return value;
   };
   var Commands = {
@@ -6303,8 +6567,8 @@
   });
   var Events = class {
     constructor() {
-      __publicField2(this, "_events", {});
-      __publicField2(this, "_bound", false);
+      __publicField(this, "_events", {});
+      __publicField(this, "_bound", false);
     }
     addEventListener(name2, handler) {
       const list2 = this._events[name2] || (this._events[name2] = []);
@@ -6387,7 +6651,7 @@
       return this;
     }
   };
-  __publicField2(Events, "Types", {
+  __publicField(Events, "Types", {
     play: "play",
     pause: "pause",
     update: "update",
@@ -6399,7 +6663,7 @@
     order: "order",
     load: "load"
   });
-  __publicField2(Events, "Methods", [
+  __publicField(Events, "Methods", [
     "addEventListener",
     "on",
     "removeEventListener",
@@ -6443,8 +6707,8 @@
   var _Vector = class extends Events {
     constructor(x = 0, y = 0) {
       super();
-      __publicField2(this, "_x", 0);
-      __publicField2(this, "_y", 0);
+      __publicField(this, "_x", 0);
+      __publicField(this, "_y", 0);
       for (let prop in proto) {
         Object.defineProperty(this, prop, proto[prop]);
       }
@@ -6653,25 +6917,25 @@
     }
   };
   var Vector = _Vector;
-  __publicField2(Vector, "zero", new _Vector());
-  __publicField2(Vector, "left", new _Vector(-1, 0));
-  __publicField2(Vector, "right", new _Vector(1, 0));
-  __publicField2(Vector, "up", new _Vector(0, -1));
-  __publicField2(Vector, "down", new _Vector(0, 1));
+  __publicField(Vector, "zero", new _Vector());
+  __publicField(Vector, "left", new _Vector(-1, 0));
+  __publicField(Vector, "right", new _Vector(1, 0));
+  __publicField(Vector, "up", new _Vector(0, -1));
+  __publicField(Vector, "down", new _Vector(0, 1));
   var Anchor = class extends Vector {
     constructor(x = 0, y = 0, ax = 0, ay = 0, bx = 0, by = 0, command = Commands.move) {
       super(x, y);
-      __publicField2(this, "controls", {
+      __publicField(this, "controls", {
         left: new Vector(),
         right: new Vector()
       });
-      __publicField2(this, "_command", Commands.move);
-      __publicField2(this, "_relative", true);
-      __publicField2(this, "_rx", 0);
-      __publicField2(this, "_ry", 0);
-      __publicField2(this, "_xAxisRotation", 0);
-      __publicField2(this, "_largeArcFlag", 0);
-      __publicField2(this, "_sweepFlag", 1);
+      __publicField(this, "_command", Commands.move);
+      __publicField(this, "_relative", true);
+      __publicField(this, "_rx", 0);
+      __publicField(this, "_ry", 0);
+      __publicField(this, "_xAxisRotation", 0);
+      __publicField(this, "_largeArcFlag", 0);
+      __publicField(this, "_sweepFlag", 1);
       for (let prop in proto2) {
         Object.defineProperty(this, prop, proto2[prop]);
       }
@@ -7140,12 +7404,12 @@
   var Element = class extends Events {
     constructor() {
       super();
-      __publicField2(this, "_flagId", false);
-      __publicField2(this, "_flagClassName", false);
-      __publicField2(this, "_renderer", {});
-      __publicField2(this, "_id", "");
-      __publicField2(this, "_className", "");
-      __publicField2(this, "classList", []);
+      __publicField(this, "_flagId", false);
+      __publicField(this, "_flagClassName", false);
+      __publicField(this, "_renderer", {});
+      __publicField(this, "_id", "");
+      __publicField(this, "_className", "");
+      __publicField(this, "classList", []);
       for (let prop in proto3) {
         Object.defineProperty(this, prop, proto3[prop]);
       }
@@ -7200,8 +7464,8 @@
   var _Matrix = class extends Events {
     constructor(a2, b2, c, d, e, f) {
       super();
-      __publicField2(this, "elements", new NumArray(9));
-      __publicField2(this, "manual", false);
+      __publicField(this, "elements", new NumArray(9));
+      __publicField(this, "manual", false);
       let elements = a2;
       if (!Array.isArray(elements)) {
         elements = Array.prototype.slice.call(arguments);
@@ -7507,7 +7771,7 @@
     }
   };
   var Matrix2 = _Matrix;
-  __publicField2(Matrix2, "Identity", [
+  __publicField(Matrix2, "Identity", [
     1,
     0,
     0,
@@ -7522,15 +7786,15 @@
   var Shape = class extends Element {
     constructor() {
       super();
-      __publicField2(this, "_flagMatrix", true);
-      __publicField2(this, "_flagScale", false);
-      __publicField2(this, "_matrix", null);
-      __publicField2(this, "_worldMatrix", null);
-      __publicField2(this, "_position", null);
-      __publicField2(this, "_rotation", 0);
-      __publicField2(this, "_scale", 1);
-      __publicField2(this, "_skewX", 0);
-      __publicField2(this, "_skewY", 0);
+      __publicField(this, "_flagMatrix", true);
+      __publicField(this, "_flagScale", false);
+      __publicField(this, "_matrix", null);
+      __publicField(this, "_worldMatrix", null);
+      __publicField(this, "_position", null);
+      __publicField(this, "_rotation", 0);
+      __publicField(this, "_scale", 1);
+      __publicField(this, "_skewX", 0);
+      __publicField(this, "_skewY", 0);
       for (let prop in proto4) {
         Object.defineProperty(this, prop, proto4[prop]);
       }
@@ -7697,7 +7961,7 @@
   var Collection = class extends Array {
     constructor() {
       super();
-      __publicField2(this, "_events", new Events());
+      __publicField(this, "_events", new Events());
       if (arguments[0] && Array.isArray(arguments[0])) {
         if (arguments[0].length > 0) {
           this.push.apply(this, arguments[0]);
@@ -7804,7 +8068,7 @@
     constructor(children) {
       children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
       super(children);
-      __publicField2(this, "ids", {});
+      __publicField(this, "ids", {});
       this.attach(children);
       this.on(Events.Types.insert, this.attach);
       this.on(Events.Types.remove, this.detach);
@@ -7830,29 +8094,29 @@
   var _Group = class extends Shape {
     constructor(children) {
       super();
-      __publicField2(this, "_flagAdditions", false);
-      __publicField2(this, "_flagSubtractions", false);
-      __publicField2(this, "_flagOrder", false);
-      __publicField2(this, "_flagOpacity", true);
-      __publicField2(this, "_flagBeginning", false);
-      __publicField2(this, "_flagEnding", false);
-      __publicField2(this, "_flagLength", false);
-      __publicField2(this, "_flagMask", false);
-      __publicField2(this, "_fill", "#fff");
-      __publicField2(this, "_stroke", "#000");
-      __publicField2(this, "_linewidth", 1);
-      __publicField2(this, "_opacity", 1);
-      __publicField2(this, "_visible", true);
-      __publicField2(this, "_cap", "round");
-      __publicField2(this, "_join", "round");
-      __publicField2(this, "_miter", 4);
-      __publicField2(this, "_closed", true);
-      __publicField2(this, "_curved", false);
-      __publicField2(this, "_automatic", true);
-      __publicField2(this, "_beginning", 0);
-      __publicField2(this, "_ending", 1);
-      __publicField2(this, "_length", 0);
-      __publicField2(this, "_mask", null);
+      __publicField(this, "_flagAdditions", false);
+      __publicField(this, "_flagSubtractions", false);
+      __publicField(this, "_flagOrder", false);
+      __publicField(this, "_flagOpacity", true);
+      __publicField(this, "_flagBeginning", false);
+      __publicField(this, "_flagEnding", false);
+      __publicField(this, "_flagLength", false);
+      __publicField(this, "_flagMask", false);
+      __publicField(this, "_fill", "#fff");
+      __publicField(this, "_stroke", "#000");
+      __publicField(this, "_linewidth", 1);
+      __publicField(this, "_opacity", 1);
+      __publicField(this, "_visible", true);
+      __publicField(this, "_cap", "round");
+      __publicField(this, "_join", "round");
+      __publicField(this, "_miter", 4);
+      __publicField(this, "_closed", true);
+      __publicField(this, "_curved", false);
+      __publicField(this, "_automatic", true);
+      __publicField(this, "_beginning", 0);
+      __publicField(this, "_ending", 1);
+      __publicField(this, "_length", 0);
+      __publicField(this, "_mask", null);
       for (let prop in proto5) {
         Object.defineProperty(this, prop, proto5[prop]);
       }
@@ -8146,8 +8410,8 @@
     }
   };
   var Group = _Group;
-  __publicField2(Group, "Children", Children);
-  __publicField2(Group, "Properties", [
+  __publicField(Group, "Children", Children);
+  __publicField(Group, "Properties", [
     "fill",
     "stroke",
     "linewidth",
@@ -9176,7 +9440,7 @@
       return this;
     }
   };
-  __publicField2(Renderer, "Utils", canvas);
+  __publicField(Renderer, "Utils", canvas);
   function renderArcEstimate(ctx2, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
     const delta = endAngle - startAngle;
     const epsilon = Curve.Tolerance.epsilon;
@@ -9265,7 +9529,7 @@
         request = request || fallbackRequest;
       }
       function fallbackRequest(callback, element) {
-        const currTime = new Date().getTime();
+        const currTime = (/* @__PURE__ */ new Date()).getTime();
         const timeToCall = Math.max(0, 16 - (currTime - lastTime));
         const id = root.setTimeout(nextRequest, timeToCall);
         lastTime = currTime + timeToCall;
@@ -9292,14 +9556,14 @@
   var TwoError = class extends Error {
     constructor(message) {
       super();
-      __publicField2(this, "name", "Two.js");
-      __publicField2(this, "message");
+      __publicField(this, "name", "Two.js");
+      __publicField(this, "message");
       this.message = message;
     }
   };
   var Registry = class {
     constructor() {
-      __publicField2(this, "map", {});
+      __publicField(this, "map", {});
     }
     add(id, obj) {
       this.map[id] = obj;
@@ -9395,12 +9659,12 @@
   var _Stop = class extends Element {
     constructor(offset, color, opacity) {
       super();
-      __publicField2(this, "_flagOffset", true);
-      __publicField2(this, "_flagOpacity", true);
-      __publicField2(this, "_flagColor", true);
-      __publicField2(this, "_offset", 0);
-      __publicField2(this, "_opacity", 1);
-      __publicField2(this, "_color", "#fff");
+      __publicField(this, "_flagOffset", true);
+      __publicField(this, "_flagOpacity", true);
+      __publicField(this, "_flagColor", true);
+      __publicField(this, "_offset", 0);
+      __publicField(this, "_opacity", 1);
+      __publicField(this, "_color", "#fff");
       for (let prop in proto6) {
         Object.defineProperty(this, prop, proto6[prop]);
       }
@@ -9434,8 +9698,8 @@
     }
   };
   var Stop = _Stop;
-  __publicField2(Stop, "Index", 0);
-  __publicField2(Stop, "Properties", ["offset", "opacity", "color"]);
+  __publicField(Stop, "Index", 0);
+  __publicField(Stop, "Properties", ["offset", "opacity", "color"]);
   var proto6 = {
     offset: {
       enumerable: true,
@@ -9480,11 +9744,11 @@
   var _Gradient = class extends Element {
     constructor(stops) {
       super();
-      __publicField2(this, "_flagStops", false);
-      __publicField2(this, "_flagSpread", false);
-      __publicField2(this, "_flagUnits", false);
-      __publicField2(this, "_spread", "");
-      __publicField2(this, "_units", "");
+      __publicField(this, "_flagStops", false);
+      __publicField(this, "_flagSpread", false);
+      __publicField(this, "_flagUnits", false);
+      __publicField(this, "_spread", "");
+      __publicField(this, "_units", "");
       for (let prop in proto7) {
         Object.defineProperty(this, prop, proto7[prop]);
       }
@@ -9537,8 +9801,8 @@
     }
   };
   var Gradient = _Gradient;
-  __publicField2(Gradient, "Stop", Stop);
-  __publicField2(Gradient, "Properties", ["spread", "stops", "renderer", "units"]);
+  __publicField(Gradient, "Stop", Stop);
+  __publicField(Gradient, "Properties", ["spread", "stops", "renderer", "units"]);
   var proto7 = {
     spread: {
       enumerable: true,
@@ -9599,9 +9863,9 @@
   var _LinearGradient = class extends Gradient {
     constructor(x1, y1, x2, y2, stops) {
       super(stops);
-      __publicField2(this, "_flagEndPoints", false);
-      __publicField2(this, "_left", null);
-      __publicField2(this, "_right", null);
+      __publicField(this, "_flagEndPoints", false);
+      __publicField(this, "_left", null);
+      __publicField(this, "_right", null);
       for (let prop in proto8) {
         Object.defineProperty(this, prop, proto8[prop]);
       }
@@ -9660,8 +9924,8 @@
     }
   };
   var LinearGradient = _LinearGradient;
-  __publicField2(LinearGradient, "Properties", ["left", "right"]);
-  __publicField2(LinearGradient, "Stop", Stop);
+  __publicField(LinearGradient, "Properties", ["left", "right"]);
+  __publicField(LinearGradient, "Stop", Stop);
   var proto8 = {
     left: {
       enumerable: true,
@@ -9698,12 +9962,12 @@
   var _RadialGradient = class extends Gradient {
     constructor(cx, cy, r, stops, fx, fy) {
       super(stops);
-      __publicField2(this, "_flagRadius", false);
-      __publicField2(this, "_flagCenter", false);
-      __publicField2(this, "_flagFocal", false);
-      __publicField2(this, "_radius", 0);
-      __publicField2(this, "_center", null);
-      __publicField2(this, "_focal", null);
+      __publicField(this, "_flagRadius", false);
+      __publicField(this, "_flagCenter", false);
+      __publicField(this, "_flagFocal", false);
+      __publicField(this, "_radius", 0);
+      __publicField(this, "_center", null);
+      __publicField(this, "_focal", null);
       for (let prop in proto9) {
         Object.defineProperty(this, prop, proto9[prop]);
       }
@@ -9769,8 +10033,8 @@
     }
   };
   var RadialGradient = _RadialGradient;
-  __publicField2(RadialGradient, "Stop", Stop);
-  __publicField2(RadialGradient, "Properties", ["center", "radius", "focal"]);
+  __publicField(RadialGradient, "Stop", Stop);
+  __publicField(RadialGradient, "Properties", ["center", "radius", "focal"]);
   var proto9 = {
     radius: {
       enumerable: true,
@@ -9829,19 +10093,19 @@
   var _Texture = class extends Element {
     constructor(src, callback) {
       super();
-      __publicField2(this, "_flagSrc", false);
-      __publicField2(this, "_flagImage", false);
-      __publicField2(this, "_flagVideo", false);
-      __publicField2(this, "_flagLoaded", false);
-      __publicField2(this, "_flagRepeat", false);
-      __publicField2(this, "_flagOffset", false);
-      __publicField2(this, "_flagScale", false);
-      __publicField2(this, "_src", "");
-      __publicField2(this, "_image", null);
-      __publicField2(this, "_loaded", false);
-      __publicField2(this, "_repeat", "no-repeat");
-      __publicField2(this, "_scale", 1);
-      __publicField2(this, "_offset", null);
+      __publicField(this, "_flagSrc", false);
+      __publicField(this, "_flagImage", false);
+      __publicField(this, "_flagVideo", false);
+      __publicField(this, "_flagLoaded", false);
+      __publicField(this, "_flagRepeat", false);
+      __publicField(this, "_flagOffset", false);
+      __publicField(this, "_flagScale", false);
+      __publicField(this, "_src", "");
+      __publicField(this, "_image", null);
+      __publicField(this, "_loaded", false);
+      __publicField(this, "_repeat", "no-repeat");
+      __publicField(this, "_scale", 1);
+      __publicField(this, "_offset", null);
       this._renderer = {};
       for (let prop in proto10) {
         Object.defineProperty(this, prop, proto10[prop]);
@@ -9967,7 +10231,7 @@
     }
   };
   var Texture = _Texture;
-  __publicField2(Texture, "Properties", [
+  __publicField(Texture, "Properties", [
     "src",
     "loaded",
     "repeat",
@@ -9975,9 +10239,9 @@
     "offset",
     "image"
   ]);
-  __publicField2(Texture, "RegularExpressions", regex);
-  __publicField2(Texture, "ImageRegistry", new Registry());
-  __publicField2(Texture, "Register", {
+  __publicField(Texture, "RegularExpressions", regex);
+  __publicField(Texture, "ImageRegistry", new Registry());
+  __publicField(Texture, "Register", {
     canvas: function(texture, callback) {
       texture._src = "#" + texture.id;
       _Texture.ImageRegistry.add(texture.src, texture.image);
@@ -10155,35 +10419,35 @@
   var _Path = class extends Shape {
     constructor(vertices, closed2, curved, manual) {
       super();
-      __publicField2(this, "_flagVertices", true);
-      __publicField2(this, "_flagLength", true);
-      __publicField2(this, "_flagFill", true);
-      __publicField2(this, "_flagStroke", true);
-      __publicField2(this, "_flagLinewidth", true);
-      __publicField2(this, "_flagOpacity", true);
-      __publicField2(this, "_flagVisible", true);
-      __publicField2(this, "_flagCap", true);
-      __publicField2(this, "_flagJoin", true);
-      __publicField2(this, "_flagMiter", true);
-      __publicField2(this, "_flagMask", false);
-      __publicField2(this, "_flagClip", false);
-      __publicField2(this, "_length", 0);
-      __publicField2(this, "_fill", "#fff");
-      __publicField2(this, "_stroke", "#000");
-      __publicField2(this, "_linewidth", 1);
-      __publicField2(this, "_opacity", 1);
-      __publicField2(this, "_visible", true);
-      __publicField2(this, "_cap", "round");
-      __publicField2(this, "_join", "round");
-      __publicField2(this, "_miter", 4);
-      __publicField2(this, "_closed", true);
-      __publicField2(this, "_curved", false);
-      __publicField2(this, "_automatic", true);
-      __publicField2(this, "_beginning", 0);
-      __publicField2(this, "_ending", 1);
-      __publicField2(this, "_mask", null);
-      __publicField2(this, "_clip", false);
-      __publicField2(this, "_dashes", null);
+      __publicField(this, "_flagVertices", true);
+      __publicField(this, "_flagLength", true);
+      __publicField(this, "_flagFill", true);
+      __publicField(this, "_flagStroke", true);
+      __publicField(this, "_flagLinewidth", true);
+      __publicField(this, "_flagOpacity", true);
+      __publicField(this, "_flagVisible", true);
+      __publicField(this, "_flagCap", true);
+      __publicField(this, "_flagJoin", true);
+      __publicField(this, "_flagMiter", true);
+      __publicField(this, "_flagMask", false);
+      __publicField(this, "_flagClip", false);
+      __publicField(this, "_length", 0);
+      __publicField(this, "_fill", "#fff");
+      __publicField(this, "_stroke", "#000");
+      __publicField(this, "_linewidth", 1);
+      __publicField(this, "_opacity", 1);
+      __publicField(this, "_visible", true);
+      __publicField(this, "_cap", "round");
+      __publicField(this, "_join", "round");
+      __publicField(this, "_miter", 4);
+      __publicField(this, "_closed", true);
+      __publicField(this, "_curved", false);
+      __publicField(this, "_automatic", true);
+      __publicField(this, "_beginning", 0);
+      __publicField(this, "_ending", 1);
+      __publicField(this, "_mask", null);
+      __publicField(this, "_clip", false);
+      __publicField(this, "_dashes", null);
       for (let prop in proto11) {
         Object.defineProperty(this, prop, proto11[prop]);
       }
@@ -10680,7 +10944,7 @@
     }
   };
   var Path = _Path;
-  __publicField2(Path, "Properties", [
+  __publicField(Path, "Properties", [
     "fill",
     "stroke",
     "linewidth",
@@ -10695,7 +10959,7 @@
     "beginning",
     "ending"
   ]);
-  __publicField2(Path, "Utils", {
+  __publicField(Path, "Utils", {
     getCurveLength: getCurveLength2
   });
   var proto11 = {
@@ -10947,11 +11211,11 @@
         new Anchor()
       ];
       super(points8, true, false, true);
-      __publicField2(this, "_flagWidth", 0);
-      __publicField2(this, "_flagHeight", 0);
-      __publicField2(this, "_width", 0);
-      __publicField2(this, "_height", 0);
-      __publicField2(this, "_origin", null);
+      __publicField(this, "_flagWidth", 0);
+      __publicField(this, "_flagHeight", 0);
+      __publicField(this, "_width", 0);
+      __publicField(this, "_height", 0);
+      __publicField(this, "_origin", null);
       for (let prop in proto12) {
         Object.defineProperty(this, prop, proto12[prop]);
       }
@@ -11017,7 +11281,7 @@
     }
   };
   var Rectangle = _Rectangle;
-  __publicField2(Rectangle, "Properties", ["width", "height"]);
+  __publicField(Rectangle, "Properties", ["width", "height"]);
   var proto12 = {
     width: {
       enumerable: true,
@@ -11057,24 +11321,24 @@
   var _Sprite = class extends Rectangle {
     constructor(path2, ox, oy, cols, rows, frameRate) {
       super(ox, oy, 0, 0);
-      __publicField2(this, "_flagTexture", false);
-      __publicField2(this, "_flagColumns", false);
-      __publicField2(this, "_flagRows", false);
-      __publicField2(this, "_flagFrameRate", false);
-      __publicField2(this, "_flagIndex", false);
-      __publicField2(this, "_amount", 1);
-      __publicField2(this, "_duration", 0);
-      __publicField2(this, "_startTime", 0);
-      __publicField2(this, "_playing", false);
-      __publicField2(this, "_firstFrame", 0);
-      __publicField2(this, "_lastFrame", 0);
-      __publicField2(this, "_loop", true);
-      __publicField2(this, "_texture", null);
-      __publicField2(this, "_columns", 1);
-      __publicField2(this, "_rows", 1);
-      __publicField2(this, "_frameRate", 0);
-      __publicField2(this, "_index", 0);
-      __publicField2(this, "_origin", null);
+      __publicField(this, "_flagTexture", false);
+      __publicField(this, "_flagColumns", false);
+      __publicField(this, "_flagRows", false);
+      __publicField(this, "_flagFrameRate", false);
+      __publicField(this, "_flagIndex", false);
+      __publicField(this, "_amount", 1);
+      __publicField(this, "_duration", 0);
+      __publicField(this, "_startTime", 0);
+      __publicField(this, "_playing", false);
+      __publicField(this, "_firstFrame", 0);
+      __publicField(this, "_lastFrame", 0);
+      __publicField(this, "_loop", true);
+      __publicField(this, "_texture", null);
+      __publicField(this, "_columns", 1);
+      __publicField(this, "_rows", 1);
+      __publicField(this, "_frameRate", 0);
+      __publicField(this, "_index", 0);
+      __publicField(this, "_origin", null);
       for (let prop in proto13) {
         Object.defineProperty(this, prop, proto13[prop]);
       }
@@ -11229,7 +11493,7 @@
     }
   };
   var Sprite = _Sprite;
-  __publicField2(Sprite, "Properties", [
+  __publicField(Sprite, "Properties", [
     "texture",
     "columns",
     "rows",
@@ -11298,8 +11562,8 @@
         points8.push(new Anchor(0, 0, 0, 0, 0, 0));
       }
       super(points8, true, true, true);
-      __publicField2(this, "_flagRadius", false);
-      __publicField2(this, "_radius", 0);
+      __publicField(this, "_flagRadius", false);
+      __publicField(this, "_radius", 0);
       for (let prop in proto14) {
         Object.defineProperty(this, prop, proto14[prop]);
       }
@@ -11376,7 +11640,7 @@
     }
   };
   var Circle = _Circle;
-  __publicField2(Circle, "Properties", ["radius"]);
+  __publicField(Circle, "Properties", ["radius"]);
   var proto14 = {
     radius: {
       enumerable: true,
@@ -11402,10 +11666,10 @@
         points8.push(new Anchor());
       }
       super(points8, true, true, true);
-      __publicField2(this, "_flagWidth", false);
-      __publicField2(this, "_flagHeight", false);
-      __publicField2(this, "_width", 0);
-      __publicField2(this, "_height", 0);
+      __publicField(this, "_flagWidth", false);
+      __publicField(this, "_flagHeight", false);
+      __publicField(this, "_width", 0);
+      __publicField(this, "_height", 0);
       for (let prop in proto15) {
         Object.defineProperty(this, prop, proto15[prop]);
       }
@@ -11488,7 +11752,7 @@
     }
   };
   var Ellipse = _Ellipse;
-  __publicField2(Ellipse, "Properties", ["width", "height"]);
+  __publicField(Ellipse, "Properties", ["width", "height"]);
   var proto15 = {
     width: {
       enumerable: true,
@@ -11576,12 +11840,12 @@
         );
       }
       super(points8);
-      __publicField2(this, "_flagWidth", false);
-      __publicField2(this, "_flagHeight", false);
-      __publicField2(this, "_flagRadius", false);
-      __publicField2(this, "_width", 0);
-      __publicField2(this, "_height", 0);
-      __publicField2(this, "_radius", 12);
+      __publicField(this, "_flagWidth", false);
+      __publicField(this, "_flagHeight", false);
+      __publicField(this, "_flagRadius", false);
+      __publicField(this, "_width", 0);
+      __publicField(this, "_height", 0);
+      __publicField(this, "_radius", 12);
       for (let prop in proto17) {
         Object.defineProperty(this, prop, proto17[prop]);
       }
@@ -11711,7 +11975,7 @@
     }
   };
   var RoundedRectangle = _RoundedRectangle;
-  __publicField2(RoundedRectangle, "Properties", ["width", "height", "radius"]);
+  __publicField(RoundedRectangle, "Properties", ["width", "height", "radius"]);
   var proto17 = {
     width: {
       enumerable: true,
@@ -11762,39 +12026,39 @@
   var _Text = class extends Shape {
     constructor(message, x, y, styles) {
       super();
-      __publicField2(this, "_flagValue", true);
-      __publicField2(this, "_flagFamily", true);
-      __publicField2(this, "_flagSize", true);
-      __publicField2(this, "_flagLeading", true);
-      __publicField2(this, "_flagAlignment", true);
-      __publicField2(this, "_flagBaseline", true);
-      __publicField2(this, "_flagStyle", true);
-      __publicField2(this, "_flagWeight", true);
-      __publicField2(this, "_flagDecoration", true);
-      __publicField2(this, "_flagFill", true);
-      __publicField2(this, "_flagStroke", true);
-      __publicField2(this, "_flagLinewidth", true);
-      __publicField2(this, "_flagOpacity", true);
-      __publicField2(this, "_flagVisible", true);
-      __publicField2(this, "_flagMask", false);
-      __publicField2(this, "_flagClip", false);
-      __publicField2(this, "_value", "");
-      __publicField2(this, "_family", "sans-serif");
-      __publicField2(this, "_size", 13);
-      __publicField2(this, "_leading", 17);
-      __publicField2(this, "_alignment", "center");
-      __publicField2(this, "_baseline", "middle");
-      __publicField2(this, "_style", "normal");
-      __publicField2(this, "_weight", 500);
-      __publicField2(this, "_decoration", "none");
-      __publicField2(this, "_fill", "#000");
-      __publicField2(this, "_stroke", "none");
-      __publicField2(this, "_linewidth", 1);
-      __publicField2(this, "_opacity", 1);
-      __publicField2(this, "_visible", true);
-      __publicField2(this, "_mask", null);
-      __publicField2(this, "_clip", false);
-      __publicField2(this, "_dashes", null);
+      __publicField(this, "_flagValue", true);
+      __publicField(this, "_flagFamily", true);
+      __publicField(this, "_flagSize", true);
+      __publicField(this, "_flagLeading", true);
+      __publicField(this, "_flagAlignment", true);
+      __publicField(this, "_flagBaseline", true);
+      __publicField(this, "_flagStyle", true);
+      __publicField(this, "_flagWeight", true);
+      __publicField(this, "_flagDecoration", true);
+      __publicField(this, "_flagFill", true);
+      __publicField(this, "_flagStroke", true);
+      __publicField(this, "_flagLinewidth", true);
+      __publicField(this, "_flagOpacity", true);
+      __publicField(this, "_flagVisible", true);
+      __publicField(this, "_flagMask", false);
+      __publicField(this, "_flagClip", false);
+      __publicField(this, "_value", "");
+      __publicField(this, "_family", "sans-serif");
+      __publicField(this, "_size", 13);
+      __publicField(this, "_leading", 17);
+      __publicField(this, "_alignment", "center");
+      __publicField(this, "_baseline", "middle");
+      __publicField(this, "_style", "normal");
+      __publicField(this, "_weight", 500);
+      __publicField(this, "_decoration", "none");
+      __publicField(this, "_fill", "#000");
+      __publicField(this, "_stroke", "none");
+      __publicField(this, "_linewidth", 1);
+      __publicField(this, "_opacity", 1);
+      __publicField(this, "_visible", true);
+      __publicField(this, "_mask", null);
+      __publicField(this, "_clip", false);
+      __publicField(this, "_dashes", null);
       for (let prop in proto18) {
         Object.defineProperty(this, prop, proto18[prop]);
       }
@@ -11939,8 +12203,8 @@
     }
   };
   var Text = _Text;
-  __publicField2(Text, "Ratio", 0.6);
-  __publicField2(Text, "Properties", [
+  __publicField(Text, "Ratio", 0.6);
+  __publicField(Text, "Properties", [
     "value",
     "family",
     "size",
@@ -13143,20 +13407,20 @@
   var _ImageSequence = class extends Rectangle {
     constructor(paths, ox, oy, frameRate) {
       super(ox, oy, 0, 0);
-      __publicField2(this, "_flagTextures", false);
-      __publicField2(this, "_flagFrameRate", false);
-      __publicField2(this, "_flagIndex", false);
-      __publicField2(this, "_amount", 1);
-      __publicField2(this, "_duration", 0);
-      __publicField2(this, "_index", 0);
-      __publicField2(this, "_startTime", 0);
-      __publicField2(this, "_playing", false);
-      __publicField2(this, "_firstFrame", 0);
-      __publicField2(this, "_lastFrame", 0);
-      __publicField2(this, "_loop", true);
-      __publicField2(this, "_textures", null);
-      __publicField2(this, "_frameRate", 0);
-      __publicField2(this, "_origin", null);
+      __publicField(this, "_flagTextures", false);
+      __publicField(this, "_flagFrameRate", false);
+      __publicField(this, "_flagIndex", false);
+      __publicField(this, "_amount", 1);
+      __publicField(this, "_duration", 0);
+      __publicField(this, "_index", 0);
+      __publicField(this, "_startTime", 0);
+      __publicField(this, "_playing", false);
+      __publicField(this, "_firstFrame", 0);
+      __publicField(this, "_lastFrame", 0);
+      __publicField(this, "_loop", true);
+      __publicField(this, "_textures", null);
+      __publicField(this, "_frameRate", 0);
+      __publicField(this, "_origin", null);
       for (let prop in proto19) {
         Object.defineProperty(this, prop, proto19[prop]);
       }
@@ -13306,12 +13570,12 @@
     }
   };
   var ImageSequence = _ImageSequence;
-  __publicField2(ImageSequence, "Properties", [
+  __publicField(ImageSequence, "Properties", [
     "textures",
     "frameRate",
     "index"
   ]);
-  __publicField2(ImageSequence, "DefaultFrameRate", 30);
+  __publicField(ImageSequence, "DefaultFrameRate", 30);
   var proto19 = {
     frameRate: {
       enumerable: true,
@@ -13382,14 +13646,14 @@
         points8.push(new Anchor());
       }
       super(points8, true, false, true);
-      __publicField2(this, "_flagStartAngle", false);
-      __publicField2(this, "_flagEndAngle", false);
-      __publicField2(this, "_flagInnerRadius", false);
-      __publicField2(this, "_flagOuterRadius", false);
-      __publicField2(this, "_startAngle", 0);
-      __publicField2(this, "_endAngle", TWO_PI);
-      __publicField2(this, "_innerRadius", 0);
-      __publicField2(this, "_outerRadius", 0);
+      __publicField(this, "_flagStartAngle", false);
+      __publicField(this, "_flagEndAngle", false);
+      __publicField(this, "_flagInnerRadius", false);
+      __publicField(this, "_flagOuterRadius", false);
+      __publicField(this, "_startAngle", 0);
+      __publicField(this, "_endAngle", TWO_PI);
+      __publicField(this, "_innerRadius", 0);
+      __publicField(this, "_outerRadius", 0);
       for (let prop in proto20) {
         Object.defineProperty(this, prop, proto20[prop]);
       }
@@ -13556,7 +13820,7 @@
     }
   };
   var ArcSegment = _ArcSegment;
-  __publicField2(ArcSegment, "Properties", ["startAngle", "endAngle", "innerRadius", "outerRadius"]);
+  __publicField(ArcSegment, "Properties", ["startAngle", "endAngle", "innerRadius", "outerRadius"]);
   var proto20 = {
     startAngle: {
       enumerable: true,
@@ -13604,32 +13868,32 @@
   var _Points = class extends Shape {
     constructor(vertices) {
       super();
-      __publicField2(this, "_flagVertices", true);
-      __publicField2(this, "_flagLength", true);
-      __publicField2(this, "_flagFill", true);
-      __publicField2(this, "_flagStroke", true);
-      __publicField2(this, "_flagLinewidth", true);
-      __publicField2(this, "_flagOpacity", true);
-      __publicField2(this, "_flagVisible", true);
-      __publicField2(this, "_flagSize", true);
-      __publicField2(this, "_flagSizeAttenuation", true);
-      __publicField2(this, "_length", 0);
-      __publicField2(this, "_fill", "#fff");
-      __publicField2(this, "_stroke", "#000");
-      __publicField2(this, "_linewidth", 1);
-      __publicField2(this, "_opacity", 1);
-      __publicField2(this, "_visible", true);
-      __publicField2(this, "_size", 1);
-      __publicField2(this, "_sizeAttenuation", false);
-      __publicField2(this, "_beginning", 0);
-      __publicField2(this, "_ending", 1);
-      __publicField2(this, "_dashes", null);
-      __publicField2(this, "noFill", Path.prototype.noFill);
-      __publicField2(this, "noStroke", Path.prototype.noStroke);
-      __publicField2(this, "corner", Path.prototype.corner);
-      __publicField2(this, "center", Path.prototype.center);
-      __publicField2(this, "getBoundingClientRect", Path.prototype.getBoundingClientRect);
-      __publicField2(this, "_updateLength", Path.prototype._updateLength);
+      __publicField(this, "_flagVertices", true);
+      __publicField(this, "_flagLength", true);
+      __publicField(this, "_flagFill", true);
+      __publicField(this, "_flagStroke", true);
+      __publicField(this, "_flagLinewidth", true);
+      __publicField(this, "_flagOpacity", true);
+      __publicField(this, "_flagVisible", true);
+      __publicField(this, "_flagSize", true);
+      __publicField(this, "_flagSizeAttenuation", true);
+      __publicField(this, "_length", 0);
+      __publicField(this, "_fill", "#fff");
+      __publicField(this, "_stroke", "#000");
+      __publicField(this, "_linewidth", 1);
+      __publicField(this, "_opacity", 1);
+      __publicField(this, "_visible", true);
+      __publicField(this, "_size", 1);
+      __publicField(this, "_sizeAttenuation", false);
+      __publicField(this, "_beginning", 0);
+      __publicField(this, "_ending", 1);
+      __publicField(this, "_dashes", null);
+      __publicField(this, "noFill", Path.prototype.noFill);
+      __publicField(this, "noStroke", Path.prototype.noStroke);
+      __publicField(this, "corner", Path.prototype.corner);
+      __publicField(this, "center", Path.prototype.center);
+      __publicField(this, "getBoundingClientRect", Path.prototype.getBoundingClientRect);
+      __publicField(this, "_updateLength", Path.prototype._updateLength);
       for (let prop in proto21) {
         Object.defineProperty(this, prop, proto21[prop]);
       }
@@ -13748,7 +14012,7 @@
     }
   };
   var Points = _Points;
-  __publicField2(Points, "Properties", [
+  __publicField(Points, "Properties", [
     "fill",
     "stroke",
     "linewidth",
@@ -13909,13 +14173,13 @@
     constructor(x, y, radius, sides) {
       sides = Math.max(sides || 0, 3);
       super();
-      __publicField2(this, "_flagWidth", false);
-      __publicField2(this, "_flagHeight", false);
-      __publicField2(this, "_flagSides", false);
-      __publicField2(this, "_radius", 0);
-      __publicField2(this, "_width", 0);
-      __publicField2(this, "_height", 0);
-      __publicField2(this, "_sides", 0);
+      __publicField(this, "_flagWidth", false);
+      __publicField(this, "_flagHeight", false);
+      __publicField(this, "_flagSides", false);
+      __publicField(this, "_radius", 0);
+      __publicField(this, "_width", 0);
+      __publicField(this, "_height", 0);
+      __publicField(this, "_sides", 0);
       for (let prop in proto22) {
         Object.defineProperty(this, prop, proto22[prop]);
       }
@@ -13996,7 +14260,7 @@
     }
   };
   var Polygon = _Polygon;
-  __publicField2(Polygon, "Properties", ["width", "height", "sides"]);
+  __publicField(Polygon, "Properties", ["width", "height", "sides"]);
   var proto22 = {
     radius: {
       enumerable: true,
@@ -14054,12 +14318,12 @@
         sides = 5;
       }
       super();
-      __publicField2(this, "_flagInnerRadius", false);
-      __publicField2(this, "_flagOuterRadius", false);
-      __publicField2(this, "_flagSides", false);
-      __publicField2(this, "_innerRadius", 0);
-      __publicField2(this, "_outerRadius", 0);
-      __publicField2(this, "_sides", 0);
+      __publicField(this, "_flagInnerRadius", false);
+      __publicField(this, "_flagOuterRadius", false);
+      __publicField(this, "_flagSides", false);
+      __publicField(this, "_innerRadius", 0);
+      __publicField(this, "_outerRadius", 0);
+      __publicField(this, "_sides", 0);
       for (let prop in proto23) {
         Object.defineProperty(this, prop, proto23[prop]);
       }
@@ -14145,7 +14409,7 @@
     }
   };
   var Star = _Star;
-  __publicField2(Star, "Properties", ["innerRadius", "outerRadius", "sides"]);
+  __publicField(Star, "Properties", ["innerRadius", "outerRadius", "sides"]);
   var proto23 = {
     innerRadius: {
       enumerable: true,
@@ -14961,7 +15225,7 @@
       return this;
     }
   };
-  __publicField2(Renderer2, "Utils", svg);
+  __publicField(Renderer2, "Utils", svg);
   var shaders = {
     create: function(gl, source, type) {
       const shader = gl.createShader(gl[type]);
@@ -16181,7 +16445,7 @@
       return this;
     }
   };
-  __publicField2(Renderer3, "Utils", webgl);
+  __publicField(Renderer3, "Utils", webgl);
   var Utils = _.extend({
     Error: TwoError,
     getRatio,
@@ -16190,15 +16454,15 @@
   }, _, CanvasShim, curves_exports, math_exports);
   var _Two = class {
     constructor(options6) {
-      __publicField2(this, "_events", new Events());
-      __publicField2(this, "type", "");
-      __publicField2(this, "renderer", null);
-      __publicField2(this, "scene", null);
-      __publicField2(this, "width", 0);
-      __publicField2(this, "height", 0);
-      __publicField2(this, "frameCount", 0);
-      __publicField2(this, "timeDelta", 0);
-      __publicField2(this, "playing", false);
+      __publicField(this, "_events", new Events());
+      __publicField(this, "type", "");
+      __publicField(this, "renderer", null);
+      __publicField(this, "scene", null);
+      __publicField(this, "width", 0);
+      __publicField(this, "height", 0);
+      __publicField(this, "frameCount", 0);
+      __publicField(this, "timeDelta", 0);
+      __publicField(this, "playing", false);
       const params = _.defaults(options6 || {}, {
         fullscreen: false,
         fitted: false,
@@ -16631,46 +16895,46 @@
     }
   };
   var Two = _Two;
-  __publicField2(Two, "nextFrameID", Constants.nextFrameID);
-  __publicField2(Two, "Types", Constants.Types);
-  __publicField2(Two, "Version", Constants.Version);
-  __publicField2(Two, "PublishDate", Constants.PublishDate);
-  __publicField2(Two, "Identifier", Constants.Identifier);
-  __publicField2(Two, "Resolution", Constants.Resolution);
-  __publicField2(Two, "AutoCalculateImportedMatrices", Constants.AutoCalculateImportedMatrices);
-  __publicField2(Two, "Instances", Constants.Instances);
-  __publicField2(Two, "uniqueId", Constants.uniqueId);
-  __publicField2(Two, "Anchor", Anchor);
-  __publicField2(Two, "Collection", Collection);
-  __publicField2(Two, "Events", Events);
-  __publicField2(Two, "Group", Group);
-  __publicField2(Two, "Matrix", Matrix2);
-  __publicField2(Two, "Path", Path);
-  __publicField2(Two, "Registry", Registry);
-  __publicField2(Two, "Shape", Shape);
-  __publicField2(Two, "Text", Text);
-  __publicField2(Two, "Vector", Vector);
-  __publicField2(Two, "Gradient", Gradient);
-  __publicField2(Two, "ImageSequence", ImageSequence);
-  __publicField2(Two, "LinearGradient", LinearGradient);
-  __publicField2(Two, "RadialGradient", RadialGradient);
-  __publicField2(Two, "Sprite", Sprite);
-  __publicField2(Two, "Stop", Stop);
-  __publicField2(Two, "Texture", Texture);
-  __publicField2(Two, "ArcSegment", ArcSegment);
-  __publicField2(Two, "Circle", Circle);
-  __publicField2(Two, "Ellipse", Ellipse);
-  __publicField2(Two, "Line", Line);
-  __publicField2(Two, "Points", Points);
-  __publicField2(Two, "Polygon", Polygon);
-  __publicField2(Two, "Rectangle", Rectangle);
-  __publicField2(Two, "RoundedRectangle", RoundedRectangle);
-  __publicField2(Two, "Star", Star);
-  __publicField2(Two, "CanvasRenderer", Renderer);
-  __publicField2(Two, "SVGRenderer", Renderer2);
-  __publicField2(Two, "WebGLRenderer", Renderer3);
-  __publicField2(Two, "Commands", Commands);
-  __publicField2(Two, "Utils", Utils);
+  __publicField(Two, "nextFrameID", Constants.nextFrameID);
+  __publicField(Two, "Types", Constants.Types);
+  __publicField(Two, "Version", Constants.Version);
+  __publicField(Two, "PublishDate", Constants.PublishDate);
+  __publicField(Two, "Identifier", Constants.Identifier);
+  __publicField(Two, "Resolution", Constants.Resolution);
+  __publicField(Two, "AutoCalculateImportedMatrices", Constants.AutoCalculateImportedMatrices);
+  __publicField(Two, "Instances", Constants.Instances);
+  __publicField(Two, "uniqueId", Constants.uniqueId);
+  __publicField(Two, "Anchor", Anchor);
+  __publicField(Two, "Collection", Collection);
+  __publicField(Two, "Events", Events);
+  __publicField(Two, "Group", Group);
+  __publicField(Two, "Matrix", Matrix2);
+  __publicField(Two, "Path", Path);
+  __publicField(Two, "Registry", Registry);
+  __publicField(Two, "Shape", Shape);
+  __publicField(Two, "Text", Text);
+  __publicField(Two, "Vector", Vector);
+  __publicField(Two, "Gradient", Gradient);
+  __publicField(Two, "ImageSequence", ImageSequence);
+  __publicField(Two, "LinearGradient", LinearGradient);
+  __publicField(Two, "RadialGradient", RadialGradient);
+  __publicField(Two, "Sprite", Sprite);
+  __publicField(Two, "Stop", Stop);
+  __publicField(Two, "Texture", Texture);
+  __publicField(Two, "ArcSegment", ArcSegment);
+  __publicField(Two, "Circle", Circle);
+  __publicField(Two, "Ellipse", Ellipse);
+  __publicField(Two, "Line", Line);
+  __publicField(Two, "Points", Points);
+  __publicField(Two, "Polygon", Polygon);
+  __publicField(Two, "Rectangle", Rectangle);
+  __publicField(Two, "RoundedRectangle", RoundedRectangle);
+  __publicField(Two, "Star", Star);
+  __publicField(Two, "CanvasRenderer", Renderer);
+  __publicField(Two, "SVGRenderer", Renderer2);
+  __publicField(Two, "WebGLRenderer", Renderer3);
+  __publicField(Two, "Commands", Commands);
+  __publicField(Two, "Utils", Utils);
   function fitToWindow() {
     const wr = document.body.getBoundingClientRect();
     const width = this.width = wr.width;
@@ -16923,54 +17187,57 @@
   var now = function() {
     return performance.now();
   };
-  var Group2 = function() {
-    function Group3() {
-      this._tweens = {};
-      this._tweensAddedDuringUpdate = {};
-    }
-    Group3.prototype.getAll = function() {
-      var _this = this;
-      return Object.keys(this._tweens).map(function(tweenId) {
-        return _this._tweens[tweenId];
-      });
-    };
-    Group3.prototype.removeAll = function() {
-      this._tweens = {};
-    };
-    Group3.prototype.add = function(tween2) {
-      this._tweens[tween2.getId()] = tween2;
-      this._tweensAddedDuringUpdate[tween2.getId()] = tween2;
-    };
-    Group3.prototype.remove = function(tween2) {
-      delete this._tweens[tween2.getId()];
-      delete this._tweensAddedDuringUpdate[tween2.getId()];
-    };
-    Group3.prototype.update = function(time, preserve) {
-      if (time === void 0) {
-        time = now();
-      }
-      if (preserve === void 0) {
-        preserve = false;
-      }
-      var tweenIds = Object.keys(this._tweens);
-      if (tweenIds.length === 0) {
-        return false;
-      }
-      while (tweenIds.length > 0) {
+  var Group2 = (
+    /** @class */
+    (function() {
+      function Group3() {
+        this._tweens = {};
         this._tweensAddedDuringUpdate = {};
-        for (var i = 0; i < tweenIds.length; i++) {
-          var tween2 = this._tweens[tweenIds[i]];
-          var autoStart = !preserve;
-          if (tween2 && tween2.update(time, autoStart) === false && !preserve) {
-            delete this._tweens[tweenIds[i]];
-          }
-        }
-        tweenIds = Object.keys(this._tweensAddedDuringUpdate);
       }
-      return true;
-    };
-    return Group3;
-  }();
+      Group3.prototype.getAll = function() {
+        var _this = this;
+        return Object.keys(this._tweens).map(function(tweenId) {
+          return _this._tweens[tweenId];
+        });
+      };
+      Group3.prototype.removeAll = function() {
+        this._tweens = {};
+      };
+      Group3.prototype.add = function(tween2) {
+        this._tweens[tween2.getId()] = tween2;
+        this._tweensAddedDuringUpdate[tween2.getId()] = tween2;
+      };
+      Group3.prototype.remove = function(tween2) {
+        delete this._tweens[tween2.getId()];
+        delete this._tweensAddedDuringUpdate[tween2.getId()];
+      };
+      Group3.prototype.update = function(time, preserve) {
+        if (time === void 0) {
+          time = now();
+        }
+        if (preserve === void 0) {
+          preserve = false;
+        }
+        var tweenIds = Object.keys(this._tweens);
+        if (tweenIds.length === 0) {
+          return false;
+        }
+        while (tweenIds.length > 0) {
+          this._tweensAddedDuringUpdate = {};
+          for (var i = 0; i < tweenIds.length; i++) {
+            var tween2 = this._tweens[tweenIds[i]];
+            var autoStart = !preserve;
+            if (tween2 && tween2.update(time, autoStart) === false && !preserve) {
+              delete this._tweens[tweenIds[i]];
+            }
+          }
+          tweenIds = Object.keys(this._tweensAddedDuringUpdate);
+        }
+        return true;
+      };
+      return Group3;
+    })()
+  );
   var Interpolation = {
     Linear: function(v, k) {
       var m = v.length - 1;
@@ -17023,7 +17290,7 @@
         var fc = Interpolation.Utils.Factorial;
         return fc(n) / fc(i) / fc(n - i);
       },
-      Factorial: function() {
+      Factorial: /* @__PURE__ */ (function() {
         var a2 = [1];
         return function(n) {
           var s = 1;
@@ -17036,7 +17303,7 @@
           a2[n] = s;
           return s;
         };
-      }(),
+      })(),
       CatmullRom: function(p0, p1, p2, p3, t) {
         var v0 = (p2 - p0) * 0.5;
         var v1 = (p3 - p1) * 0.5;
@@ -17046,435 +17313,443 @@
       }
     }
   };
-  var Sequence = function() {
-    function Sequence2() {
-    }
-    Sequence2.nextId = function() {
-      return Sequence2._nextId++;
-    };
-    Sequence2._nextId = 0;
-    return Sequence2;
-  }();
+  var Sequence = (
+    /** @class */
+    (function() {
+      function Sequence2() {
+      }
+      Sequence2.nextId = function() {
+        return Sequence2._nextId++;
+      };
+      Sequence2._nextId = 0;
+      return Sequence2;
+    })()
+  );
   var mainGroup = new Group2();
-  var Tween = function() {
-    function Tween2(_object, _group) {
-      if (_group === void 0) {
-        _group = mainGroup;
-      }
-      this._object = _object;
-      this._group = _group;
-      this._isPaused = false;
-      this._pauseStart = 0;
-      this._valuesStart = {};
-      this._valuesEnd = {};
-      this._valuesStartRepeat = {};
-      this._duration = 1e3;
-      this._isDynamic = false;
-      this._initialRepeat = 0;
-      this._repeat = 0;
-      this._yoyo = false;
-      this._isPlaying = false;
-      this._reversed = false;
-      this._delayTime = 0;
-      this._startTime = 0;
-      this._easingFunction = Easing.Linear.None;
-      this._interpolationFunction = Interpolation.Linear;
-      this._chainedTweens = [];
-      this._onStartCallbackFired = false;
-      this._onEveryStartCallbackFired = false;
-      this._id = Sequence.nextId();
-      this._isChainStopped = false;
-      this._propertiesAreSetUp = false;
-      this._goToEnd = false;
-    }
-    Tween2.prototype.getId = function() {
-      return this._id;
-    };
-    Tween2.prototype.isPlaying = function() {
-      return this._isPlaying;
-    };
-    Tween2.prototype.isPaused = function() {
-      return this._isPaused;
-    };
-    Tween2.prototype.to = function(target, duration2) {
-      if (duration2 === void 0) {
-        duration2 = 1e3;
-      }
-      if (this._isPlaying)
-        throw new Error("Can not call Tween.to() while Tween is already started or paused. Stop the Tween first.");
-      this._valuesEnd = target;
-      this._propertiesAreSetUp = false;
-      this._duration = duration2;
-      return this;
-    };
-    Tween2.prototype.duration = function(duration2) {
-      if (duration2 === void 0) {
-        duration2 = 1e3;
-      }
-      this._duration = duration2;
-      return this;
-    };
-    Tween2.prototype.dynamic = function(dynamic) {
-      if (dynamic === void 0) {
-        dynamic = false;
-      }
-      this._isDynamic = dynamic;
-      return this;
-    };
-    Tween2.prototype.start = function(time, overrideStartingValues) {
-      if (time === void 0) {
-        time = now();
-      }
-      if (overrideStartingValues === void 0) {
-        overrideStartingValues = false;
-      }
-      if (this._isPlaying) {
-        return this;
-      }
-      this._group && this._group.add(this);
-      this._repeat = this._initialRepeat;
-      if (this._reversed) {
+  var Tween = (
+    /** @class */
+    (function() {
+      function Tween2(_object, _group) {
+        if (_group === void 0) {
+          _group = mainGroup;
+        }
+        this._object = _object;
+        this._group = _group;
+        this._isPaused = false;
+        this._pauseStart = 0;
+        this._valuesStart = {};
+        this._valuesEnd = {};
+        this._valuesStartRepeat = {};
+        this._duration = 1e3;
+        this._isDynamic = false;
+        this._initialRepeat = 0;
+        this._repeat = 0;
+        this._yoyo = false;
+        this._isPlaying = false;
         this._reversed = false;
-        for (var property in this._valuesStartRepeat) {
-          this._swapEndStartRepeatValues(property);
-          this._valuesStart[property] = this._valuesStartRepeat[property];
-        }
+        this._delayTime = 0;
+        this._startTime = 0;
+        this._easingFunction = Easing.Linear.None;
+        this._interpolationFunction = Interpolation.Linear;
+        this._chainedTweens = [];
+        this._onStartCallbackFired = false;
+        this._onEveryStartCallbackFired = false;
+        this._id = Sequence.nextId();
+        this._isChainStopped = false;
+        this._propertiesAreSetUp = false;
+        this._goToEnd = false;
       }
-      this._isPlaying = true;
-      this._isPaused = false;
-      this._onStartCallbackFired = false;
-      this._onEveryStartCallbackFired = false;
-      this._isChainStopped = false;
-      this._startTime = time;
-      this._startTime += this._delayTime;
-      if (!this._propertiesAreSetUp || overrideStartingValues) {
-        this._propertiesAreSetUp = true;
-        if (!this._isDynamic) {
-          var tmp = {};
-          for (var prop in this._valuesEnd)
-            tmp[prop] = this._valuesEnd[prop];
-          this._valuesEnd = tmp;
+      Tween2.prototype.getId = function() {
+        return this._id;
+      };
+      Tween2.prototype.isPlaying = function() {
+        return this._isPlaying;
+      };
+      Tween2.prototype.isPaused = function() {
+        return this._isPaused;
+      };
+      Tween2.prototype.to = function(target, duration2) {
+        if (duration2 === void 0) {
+          duration2 = 1e3;
         }
-        this._setupProperties(this._object, this._valuesStart, this._valuesEnd, this._valuesStartRepeat, overrideStartingValues);
-      }
-      return this;
-    };
-    Tween2.prototype.startFromCurrentValues = function(time) {
-      return this.start(time, true);
-    };
-    Tween2.prototype._setupProperties = function(_object, _valuesStart, _valuesEnd, _valuesStartRepeat, overrideStartingValues) {
-      for (var property in _valuesEnd) {
-        var startValue = _object[property];
-        var startValueIsArray = Array.isArray(startValue);
-        var propType = startValueIsArray ? "array" : typeof startValue;
-        var isInterpolationList = !startValueIsArray && Array.isArray(_valuesEnd[property]);
-        if (propType === "undefined" || propType === "function") {
-          continue;
-        }
-        if (isInterpolationList) {
-          var endValues = _valuesEnd[property];
-          if (endValues.length === 0) {
-            continue;
-          }
-          var temp2 = [startValue];
-          for (var i = 0, l = endValues.length; i < l; i += 1) {
-            var value = this._handleRelativeValue(startValue, endValues[i]);
-            if (isNaN(value)) {
-              isInterpolationList = false;
-              console.warn("Found invalid interpolation list. Skipping.");
-              break;
-            }
-            temp2.push(value);
-          }
-          if (isInterpolationList) {
-            _valuesEnd[property] = temp2;
-          }
-        }
-        if ((propType === "object" || startValueIsArray) && startValue && !isInterpolationList) {
-          _valuesStart[property] = startValueIsArray ? [] : {};
-          var nestedObject = startValue;
-          for (var prop in nestedObject) {
-            _valuesStart[property][prop] = nestedObject[prop];
-          }
-          _valuesStartRepeat[property] = startValueIsArray ? [] : {};
-          var endValues = _valuesEnd[property];
-          if (!this._isDynamic) {
-            var tmp = {};
-            for (var prop in endValues)
-              tmp[prop] = endValues[prop];
-            _valuesEnd[property] = endValues = tmp;
-          }
-          this._setupProperties(nestedObject, _valuesStart[property], endValues, _valuesStartRepeat[property], overrideStartingValues);
-        } else {
-          if (typeof _valuesStart[property] === "undefined" || overrideStartingValues) {
-            _valuesStart[property] = startValue;
-          }
-          if (!startValueIsArray) {
-            _valuesStart[property] *= 1;
-          }
-          if (isInterpolationList) {
-            _valuesStartRepeat[property] = _valuesEnd[property].slice().reverse();
-          } else {
-            _valuesStartRepeat[property] = _valuesStart[property] || 0;
-          }
-        }
-      }
-    };
-    Tween2.prototype.stop = function() {
-      if (!this._isChainStopped) {
-        this._isChainStopped = true;
-        this.stopChainedTweens();
-      }
-      if (!this._isPlaying) {
+        if (this._isPlaying)
+          throw new Error("Can not call Tween.to() while Tween is already started or paused. Stop the Tween first.");
+        this._valuesEnd = target;
+        this._propertiesAreSetUp = false;
+        this._duration = duration2;
         return this;
-      }
-      this._group && this._group.remove(this);
-      this._isPlaying = false;
-      this._isPaused = false;
-      if (this._onStopCallback) {
-        this._onStopCallback(this._object);
-      }
-      return this;
-    };
-    Tween2.prototype.end = function() {
-      this._goToEnd = true;
-      this.update(Infinity);
-      return this;
-    };
-    Tween2.prototype.pause = function(time) {
-      if (time === void 0) {
-        time = now();
-      }
-      if (this._isPaused || !this._isPlaying) {
-        return this;
-      }
-      this._isPaused = true;
-      this._pauseStart = time;
-      this._group && this._group.remove(this);
-      return this;
-    };
-    Tween2.prototype.resume = function(time) {
-      if (time === void 0) {
-        time = now();
-      }
-      if (!this._isPaused || !this._isPlaying) {
-        return this;
-      }
-      this._isPaused = false;
-      this._startTime += time - this._pauseStart;
-      this._pauseStart = 0;
-      this._group && this._group.add(this);
-      return this;
-    };
-    Tween2.prototype.stopChainedTweens = function() {
-      for (var i = 0, numChainedTweens = this._chainedTweens.length; i < numChainedTweens; i++) {
-        this._chainedTweens[i].stop();
-      }
-      return this;
-    };
-    Tween2.prototype.group = function(group8) {
-      if (group8 === void 0) {
-        group8 = mainGroup;
-      }
-      this._group = group8;
-      return this;
-    };
-    Tween2.prototype.delay = function(amount12) {
-      if (amount12 === void 0) {
-        amount12 = 0;
-      }
-      this._delayTime = amount12;
-      return this;
-    };
-    Tween2.prototype.repeat = function(times) {
-      if (times === void 0) {
-        times = 0;
-      }
-      this._initialRepeat = times;
-      this._repeat = times;
-      return this;
-    };
-    Tween2.prototype.repeatDelay = function(amount12) {
-      this._repeatDelayTime = amount12;
-      return this;
-    };
-    Tween2.prototype.yoyo = function(yoyo) {
-      if (yoyo === void 0) {
-        yoyo = false;
-      }
-      this._yoyo = yoyo;
-      return this;
-    };
-    Tween2.prototype.easing = function(easingFunction) {
-      if (easingFunction === void 0) {
-        easingFunction = Easing.Linear.None;
-      }
-      this._easingFunction = easingFunction;
-      return this;
-    };
-    Tween2.prototype.interpolation = function(interpolationFunction) {
-      if (interpolationFunction === void 0) {
-        interpolationFunction = Interpolation.Linear;
-      }
-      this._interpolationFunction = interpolationFunction;
-      return this;
-    };
-    Tween2.prototype.chain = function() {
-      var tweens = [];
-      for (var _i = 0; _i < arguments.length; _i++) {
-        tweens[_i] = arguments[_i];
-      }
-      this._chainedTweens = tweens;
-      return this;
-    };
-    Tween2.prototype.onStart = function(callback) {
-      this._onStartCallback = callback;
-      return this;
-    };
-    Tween2.prototype.onEveryStart = function(callback) {
-      this._onEveryStartCallback = callback;
-      return this;
-    };
-    Tween2.prototype.onUpdate = function(callback) {
-      this._onUpdateCallback = callback;
-      return this;
-    };
-    Tween2.prototype.onRepeat = function(callback) {
-      this._onRepeatCallback = callback;
-      return this;
-    };
-    Tween2.prototype.onComplete = function(callback) {
-      this._onCompleteCallback = callback;
-      return this;
-    };
-    Tween2.prototype.onStop = function(callback) {
-      this._onStopCallback = callback;
-      return this;
-    };
-    Tween2.prototype.update = function(time, autoStart) {
-      if (time === void 0) {
-        time = now();
-      }
-      if (autoStart === void 0) {
-        autoStart = true;
-      }
-      if (this._isPaused)
-        return true;
-      var property;
-      var elapsed;
-      var endTime = this._startTime + this._duration;
-      if (!this._goToEnd && !this._isPlaying) {
-        if (time > endTime)
-          return false;
-        if (autoStart)
-          this.start(time, true);
-      }
-      this._goToEnd = false;
-      if (time < this._startTime) {
-        return true;
-      }
-      if (this._onStartCallbackFired === false) {
-        if (this._onStartCallback) {
-          this._onStartCallback(this._object);
+      };
+      Tween2.prototype.duration = function(duration2) {
+        if (duration2 === void 0) {
+          duration2 = 1e3;
         }
-        this._onStartCallbackFired = true;
-      }
-      if (this._onEveryStartCallbackFired === false) {
-        if (this._onEveryStartCallback) {
-          this._onEveryStartCallback(this._object);
+        this._duration = duration2;
+        return this;
+      };
+      Tween2.prototype.dynamic = function(dynamic) {
+        if (dynamic === void 0) {
+          dynamic = false;
         }
-        this._onEveryStartCallbackFired = true;
-      }
-      elapsed = (time - this._startTime) / this._duration;
-      elapsed = this._duration === 0 || elapsed > 1 ? 1 : elapsed;
-      var value = this._easingFunction(elapsed);
-      this._updateProperties(this._object, this._valuesStart, this._valuesEnd, value);
-      if (this._onUpdateCallback) {
-        this._onUpdateCallback(this._object, elapsed);
-      }
-      if (elapsed === 1) {
-        if (this._repeat > 0) {
-          if (isFinite(this._repeat)) {
-            this._repeat--;
-          }
-          for (property in this._valuesStartRepeat) {
-            if (!this._yoyo && typeof this._valuesEnd[property] === "string") {
-              this._valuesStartRepeat[property] = this._valuesStartRepeat[property] + parseFloat(this._valuesEnd[property]);
-            }
-            if (this._yoyo) {
-              this._swapEndStartRepeatValues(property);
-            }
+        this._isDynamic = dynamic;
+        return this;
+      };
+      Tween2.prototype.start = function(time, overrideStartingValues) {
+        if (time === void 0) {
+          time = now();
+        }
+        if (overrideStartingValues === void 0) {
+          overrideStartingValues = false;
+        }
+        if (this._isPlaying) {
+          return this;
+        }
+        this._group && this._group.add(this);
+        this._repeat = this._initialRepeat;
+        if (this._reversed) {
+          this._reversed = false;
+          for (var property in this._valuesStartRepeat) {
+            this._swapEndStartRepeatValues(property);
             this._valuesStart[property] = this._valuesStartRepeat[property];
           }
-          if (this._yoyo) {
-            this._reversed = !this._reversed;
+        }
+        this._isPlaying = true;
+        this._isPaused = false;
+        this._onStartCallbackFired = false;
+        this._onEveryStartCallbackFired = false;
+        this._isChainStopped = false;
+        this._startTime = time;
+        this._startTime += this._delayTime;
+        if (!this._propertiesAreSetUp || overrideStartingValues) {
+          this._propertiesAreSetUp = true;
+          if (!this._isDynamic) {
+            var tmp = {};
+            for (var prop in this._valuesEnd)
+              tmp[prop] = this._valuesEnd[prop];
+            this._valuesEnd = tmp;
           }
-          if (this._repeatDelayTime !== void 0) {
-            this._startTime = time + this._repeatDelayTime;
+          this._setupProperties(this._object, this._valuesStart, this._valuesEnd, this._valuesStartRepeat, overrideStartingValues);
+        }
+        return this;
+      };
+      Tween2.prototype.startFromCurrentValues = function(time) {
+        return this.start(time, true);
+      };
+      Tween2.prototype._setupProperties = function(_object, _valuesStart, _valuesEnd, _valuesStartRepeat, overrideStartingValues) {
+        for (var property in _valuesEnd) {
+          var startValue = _object[property];
+          var startValueIsArray = Array.isArray(startValue);
+          var propType = startValueIsArray ? "array" : typeof startValue;
+          var isInterpolationList = !startValueIsArray && Array.isArray(_valuesEnd[property]);
+          if (propType === "undefined" || propType === "function") {
+            continue;
+          }
+          if (isInterpolationList) {
+            var endValues = _valuesEnd[property];
+            if (endValues.length === 0) {
+              continue;
+            }
+            var temp2 = [startValue];
+            for (var i = 0, l = endValues.length; i < l; i += 1) {
+              var value = this._handleRelativeValue(startValue, endValues[i]);
+              if (isNaN(value)) {
+                isInterpolationList = false;
+                console.warn("Found invalid interpolation list. Skipping.");
+                break;
+              }
+              temp2.push(value);
+            }
+            if (isInterpolationList) {
+              _valuesEnd[property] = temp2;
+            }
+          }
+          if ((propType === "object" || startValueIsArray) && startValue && !isInterpolationList) {
+            _valuesStart[property] = startValueIsArray ? [] : {};
+            var nestedObject = startValue;
+            for (var prop in nestedObject) {
+              _valuesStart[property][prop] = nestedObject[prop];
+            }
+            _valuesStartRepeat[property] = startValueIsArray ? [] : {};
+            var endValues = _valuesEnd[property];
+            if (!this._isDynamic) {
+              var tmp = {};
+              for (var prop in endValues)
+                tmp[prop] = endValues[prop];
+              _valuesEnd[property] = endValues = tmp;
+            }
+            this._setupProperties(nestedObject, _valuesStart[property], endValues, _valuesStartRepeat[property], overrideStartingValues);
           } else {
-            this._startTime = time + this._delayTime;
+            if (typeof _valuesStart[property] === "undefined" || overrideStartingValues) {
+              _valuesStart[property] = startValue;
+            }
+            if (!startValueIsArray) {
+              _valuesStart[property] *= 1;
+            }
+            if (isInterpolationList) {
+              _valuesStartRepeat[property] = _valuesEnd[property].slice().reverse();
+            } else {
+              _valuesStartRepeat[property] = _valuesStart[property] || 0;
+            }
           }
-          if (this._onRepeatCallback) {
-            this._onRepeatCallback(this._object);
-          }
-          this._onEveryStartCallbackFired = false;
+        }
+      };
+      Tween2.prototype.stop = function() {
+        if (!this._isChainStopped) {
+          this._isChainStopped = true;
+          this.stopChainedTweens();
+        }
+        if (!this._isPlaying) {
+          return this;
+        }
+        this._group && this._group.remove(this);
+        this._isPlaying = false;
+        this._isPaused = false;
+        if (this._onStopCallback) {
+          this._onStopCallback(this._object);
+        }
+        return this;
+      };
+      Tween2.prototype.end = function() {
+        this._goToEnd = true;
+        this.update(Infinity);
+        return this;
+      };
+      Tween2.prototype.pause = function(time) {
+        if (time === void 0) {
+          time = now();
+        }
+        if (this._isPaused || !this._isPlaying) {
+          return this;
+        }
+        this._isPaused = true;
+        this._pauseStart = time;
+        this._group && this._group.remove(this);
+        return this;
+      };
+      Tween2.prototype.resume = function(time) {
+        if (time === void 0) {
+          time = now();
+        }
+        if (!this._isPaused || !this._isPlaying) {
+          return this;
+        }
+        this._isPaused = false;
+        this._startTime += time - this._pauseStart;
+        this._pauseStart = 0;
+        this._group && this._group.add(this);
+        return this;
+      };
+      Tween2.prototype.stopChainedTweens = function() {
+        for (var i = 0, numChainedTweens = this._chainedTweens.length; i < numChainedTweens; i++) {
+          this._chainedTweens[i].stop();
+        }
+        return this;
+      };
+      Tween2.prototype.group = function(group8) {
+        if (group8 === void 0) {
+          group8 = mainGroup;
+        }
+        this._group = group8;
+        return this;
+      };
+      Tween2.prototype.delay = function(amount12) {
+        if (amount12 === void 0) {
+          amount12 = 0;
+        }
+        this._delayTime = amount12;
+        return this;
+      };
+      Tween2.prototype.repeat = function(times) {
+        if (times === void 0) {
+          times = 0;
+        }
+        this._initialRepeat = times;
+        this._repeat = times;
+        return this;
+      };
+      Tween2.prototype.repeatDelay = function(amount12) {
+        this._repeatDelayTime = amount12;
+        return this;
+      };
+      Tween2.prototype.yoyo = function(yoyo) {
+        if (yoyo === void 0) {
+          yoyo = false;
+        }
+        this._yoyo = yoyo;
+        return this;
+      };
+      Tween2.prototype.easing = function(easingFunction) {
+        if (easingFunction === void 0) {
+          easingFunction = Easing.Linear.None;
+        }
+        this._easingFunction = easingFunction;
+        return this;
+      };
+      Tween2.prototype.interpolation = function(interpolationFunction) {
+        if (interpolationFunction === void 0) {
+          interpolationFunction = Interpolation.Linear;
+        }
+        this._interpolationFunction = interpolationFunction;
+        return this;
+      };
+      Tween2.prototype.chain = function() {
+        var tweens = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+          tweens[_i] = arguments[_i];
+        }
+        this._chainedTweens = tweens;
+        return this;
+      };
+      Tween2.prototype.onStart = function(callback) {
+        this._onStartCallback = callback;
+        return this;
+      };
+      Tween2.prototype.onEveryStart = function(callback) {
+        this._onEveryStartCallback = callback;
+        return this;
+      };
+      Tween2.prototype.onUpdate = function(callback) {
+        this._onUpdateCallback = callback;
+        return this;
+      };
+      Tween2.prototype.onRepeat = function(callback) {
+        this._onRepeatCallback = callback;
+        return this;
+      };
+      Tween2.prototype.onComplete = function(callback) {
+        this._onCompleteCallback = callback;
+        return this;
+      };
+      Tween2.prototype.onStop = function(callback) {
+        this._onStopCallback = callback;
+        return this;
+      };
+      Tween2.prototype.update = function(time, autoStart) {
+        if (time === void 0) {
+          time = now();
+        }
+        if (autoStart === void 0) {
+          autoStart = true;
+        }
+        if (this._isPaused)
           return true;
+        var property;
+        var elapsed;
+        var endTime = this._startTime + this._duration;
+        if (!this._goToEnd && !this._isPlaying) {
+          if (time > endTime)
+            return false;
+          if (autoStart)
+            this.start(time, true);
+        }
+        this._goToEnd = false;
+        if (time < this._startTime) {
+          return true;
+        }
+        if (this._onStartCallbackFired === false) {
+          if (this._onStartCallback) {
+            this._onStartCallback(this._object);
+          }
+          this._onStartCallbackFired = true;
+        }
+        if (this._onEveryStartCallbackFired === false) {
+          if (this._onEveryStartCallback) {
+            this._onEveryStartCallback(this._object);
+          }
+          this._onEveryStartCallbackFired = true;
+        }
+        elapsed = (time - this._startTime) / this._duration;
+        elapsed = this._duration === 0 || elapsed > 1 ? 1 : elapsed;
+        var value = this._easingFunction(elapsed);
+        this._updateProperties(this._object, this._valuesStart, this._valuesEnd, value);
+        if (this._onUpdateCallback) {
+          this._onUpdateCallback(this._object, elapsed);
+        }
+        if (elapsed === 1) {
+          if (this._repeat > 0) {
+            if (isFinite(this._repeat)) {
+              this._repeat--;
+            }
+            for (property in this._valuesStartRepeat) {
+              if (!this._yoyo && typeof this._valuesEnd[property] === "string") {
+                this._valuesStartRepeat[property] = // eslint-disable-next-line
+                // @ts-ignore FIXME?
+                this._valuesStartRepeat[property] + parseFloat(this._valuesEnd[property]);
+              }
+              if (this._yoyo) {
+                this._swapEndStartRepeatValues(property);
+              }
+              this._valuesStart[property] = this._valuesStartRepeat[property];
+            }
+            if (this._yoyo) {
+              this._reversed = !this._reversed;
+            }
+            if (this._repeatDelayTime !== void 0) {
+              this._startTime = time + this._repeatDelayTime;
+            } else {
+              this._startTime = time + this._delayTime;
+            }
+            if (this._onRepeatCallback) {
+              this._onRepeatCallback(this._object);
+            }
+            this._onEveryStartCallbackFired = false;
+            return true;
+          } else {
+            if (this._onCompleteCallback) {
+              this._onCompleteCallback(this._object);
+            }
+            for (var i = 0, numChainedTweens = this._chainedTweens.length; i < numChainedTweens; i++) {
+              this._chainedTweens[i].start(this._startTime + this._duration, false);
+            }
+            this._isPlaying = false;
+            return false;
+          }
+        }
+        return true;
+      };
+      Tween2.prototype._updateProperties = function(_object, _valuesStart, _valuesEnd, value) {
+        for (var property in _valuesEnd) {
+          if (_valuesStart[property] === void 0) {
+            continue;
+          }
+          var start19 = _valuesStart[property] || 0;
+          var end = _valuesEnd[property];
+          var startIsArray = Array.isArray(_object[property]);
+          var endIsArray = Array.isArray(end);
+          var isInterpolationList = !startIsArray && endIsArray;
+          if (isInterpolationList) {
+            _object[property] = this._interpolationFunction(end, value);
+          } else if (typeof end === "object" && end) {
+            this._updateProperties(_object[property], start19, end, value);
+          } else {
+            end = this._handleRelativeValue(start19, end);
+            if (typeof end === "number") {
+              _object[property] = start19 + (end - start19) * value;
+            }
+          }
+        }
+      };
+      Tween2.prototype._handleRelativeValue = function(start19, end) {
+        if (typeof end !== "string") {
+          return end;
+        }
+        if (end.charAt(0) === "+" || end.charAt(0) === "-") {
+          return start19 + parseFloat(end);
+        }
+        return parseFloat(end);
+      };
+      Tween2.prototype._swapEndStartRepeatValues = function(property) {
+        var tmp = this._valuesStartRepeat[property];
+        var endValue = this._valuesEnd[property];
+        if (typeof endValue === "string") {
+          this._valuesStartRepeat[property] = this._valuesStartRepeat[property] + parseFloat(endValue);
         } else {
-          if (this._onCompleteCallback) {
-            this._onCompleteCallback(this._object);
-          }
-          for (var i = 0, numChainedTweens = this._chainedTweens.length; i < numChainedTweens; i++) {
-            this._chainedTweens[i].start(this._startTime + this._duration, false);
-          }
-          this._isPlaying = false;
-          return false;
+          this._valuesStartRepeat[property] = this._valuesEnd[property];
         }
-      }
-      return true;
-    };
-    Tween2.prototype._updateProperties = function(_object, _valuesStart, _valuesEnd, value) {
-      for (var property in _valuesEnd) {
-        if (_valuesStart[property] === void 0) {
-          continue;
-        }
-        var start19 = _valuesStart[property] || 0;
-        var end = _valuesEnd[property];
-        var startIsArray = Array.isArray(_object[property]);
-        var endIsArray = Array.isArray(end);
-        var isInterpolationList = !startIsArray && endIsArray;
-        if (isInterpolationList) {
-          _object[property] = this._interpolationFunction(end, value);
-        } else if (typeof end === "object" && end) {
-          this._updateProperties(_object[property], start19, end, value);
-        } else {
-          end = this._handleRelativeValue(start19, end);
-          if (typeof end === "number") {
-            _object[property] = start19 + (end - start19) * value;
-          }
-        }
-      }
-    };
-    Tween2.prototype._handleRelativeValue = function(start19, end) {
-      if (typeof end !== "string") {
-        return end;
-      }
-      if (end.charAt(0) === "+" || end.charAt(0) === "-") {
-        return start19 + parseFloat(end);
-      }
-      return parseFloat(end);
-    };
-    Tween2.prototype._swapEndStartRepeatValues = function(property) {
-      var tmp = this._valuesStartRepeat[property];
-      var endValue = this._valuesEnd[property];
-      if (typeof endValue === "string") {
-        this._valuesStartRepeat[property] = this._valuesStartRepeat[property] + parseFloat(endValue);
-      } else {
-        this._valuesStartRepeat[property] = this._valuesEnd[property];
-      }
-      this._valuesEnd[property] = tmp;
-    };
-    return Tween2;
-  }();
+        this._valuesEnd[property] = tmp;
+      };
+      return Tween2;
+    })()
+  );
   var nextId = Sequence.nextId;
   var TWEEN = mainGroup;
   var getAll = TWEEN.getAll.bind(TWEEN);
@@ -17503,6 +17778,7 @@
   var keys = ["background", "middleground", "foreground", "highlight", "accent", "white", "black"];
   var palette = [
     {
+      // Grey
       background: { r: 181, g: 181, b: 181 },
       middleground: { r: 141, g: 164, b: 170 },
       foreground: { r: 227, g: 79, b: 12 },
@@ -17513,6 +17789,7 @@
       isDark: false
     },
     {
+      // White
       background: { r: 255, g: 230, b: 255 },
       middleground: { r: 151, g: 41, b: 164 },
       foreground: { r: 1, g: 120, b: 186 },
@@ -17523,7 +17800,8 @@
       isDark: false
     },
     {
-      background: { r: 217, g: 82, b: 31 },
+      // Orange
+      background: { r: 217, g: 150, b: 61 },
       middleground: { r: 143, g: 74, b: 45 },
       foreground: { r: 255, g: 108, b: 87 },
       highlight: { r: 255, g: 126, b: 138 },
@@ -17533,6 +17811,7 @@
       isDark: false
     },
     {
+      // Blue
       background: { r: 57, g: 109, b: 193 },
       middleground: { r: 186, g: 60, b: 223 },
       foreground: { r: 213, g: 255, b: 93 },
@@ -17543,6 +17822,7 @@
       isDark: true
     },
     {
+      // Cream
       background: { r: 255, g: 244, b: 211 },
       middleground: { r: 207, g: 145, b: 79 },
       foreground: { r: 38, g: 83, b: 122 },
@@ -17553,6 +17833,7 @@
       isDark: false
     },
     {
+      // Purple
       background: { r: 39, g: 6, b: 54 },
       middleground: { r: 69, g: 26, b: 87 },
       foreground: { r: 252, g: 25, b: 246 },
@@ -17716,22 +17997,21 @@
       context.decodeAudioData(data, success, reject);
     });
   }
-  var _loop, _volume, _speed, _startTime, _offset, _ended, ended_fn;
   var Sound = class {
+    #loop = false;
+    #volume = 1;
+    #speed = 1;
+    #startTime = 0;
+    #offset = 0;
+    playing = false;
+    filter = null;
+    buffer = null;
+    data = null;
+    gain = null;
+    src = null;
+    ctx = null;
+    static has = has;
     constructor(context, uri, callback) {
-      __privateAdd(this, _ended);
-      __privateAdd(this, _loop, false);
-      __privateAdd(this, _volume, 1);
-      __privateAdd(this, _speed, 1);
-      __privateAdd(this, _startTime, 0);
-      __privateAdd(this, _offset, 0);
-      __publicField(this, "playing", false);
-      __publicField(this, "filter", null);
-      __publicField(this, "buffer", null);
-      __publicField(this, "data", null);
-      __publicField(this, "gain", null);
-      __publicField(this, "src", null);
-      __publicField(this, "ctx", null);
       const scope = this;
       this.ctx = context;
       switch (typeof uri) {
@@ -17752,11 +18032,14 @@
         scope.data = data;
         scope.gain = scope.filter = context.createGain();
         scope.gain.connect(context.destination);
-        scope.gain.gain.value = Math.max(Math.min(__privateGet(scope, _volume), 1), 0);
+        scope.gain.gain.value = Math.max(Math.min(scope.#volume, 1), 0);
         if (callback) {
           callback(this);
         }
       }
+    }
+    #ended() {
+      this.playing = false;
     }
     applyFilter(node) {
       if (this.filter && this.filter !== this.gain) {
@@ -17782,14 +18065,14 @@
       if (this.source) {
         this.stop();
       }
-      __privateSet(this, _startTime, params.time);
-      __privateSet(this, _loop, params.loop);
+      this.#startTime = params.time;
+      this.#loop = params.loop;
       this.playing = true;
       this.source = this.ctx.createBufferSource();
-      this.source.onended = __privateMethod(this, _ended, ended_fn);
+      this.source.onended = this.#ended;
       this.source.buffer = this.buffer;
       this.source.loop = params.loop;
-      this.source.playbackRate.value = __privateGet(this, _speed);
+      this.source.playbackRate.value = this.#speed;
       this.source.connect(this.filter);
       if (this.source.start) {
         this.source.start(params.time, params.offset);
@@ -17816,11 +18099,11 @@
       if (params.time != "undefined") {
         currentTime = params.time;
       }
-      __privateSet(this, _offset, currentTime - __privateGet(this, _startTime) + (__privateGet(this, _offset) || 0));
-      if (__privateGet(this, _loop)) {
-        __privateSet(this, _offset, Math.max(__privateGet(this, _offset), 0) % this.buffer.duration);
+      this.#offset = currentTime - this.#startTime + (this.#offset || 0);
+      if (this.#loop) {
+        this.#offset = Math.max(this.#offset, 0) % this.buffer.duration;
       } else {
-        __privateSet(this, _offset, Math.min(Math.max(__privateGet(this, _offset), 0), this.buffer.duration));
+        this.#offset = Math.min(Math.max(this.#offset, 0), this.buffer.duration);
       }
       return this;
     }
@@ -17838,41 +18121,41 @@
         this.source.noteOff(params.time);
       }
       this.playing = false;
-      __privateSet(this, _offset, 0);
+      this.#offset = 0;
       return this;
     }
     get volume() {
-      return __privateGet(this, _volume);
+      return this.#volume;
     }
     set volume(v) {
-      __privateSet(this, _volume, v);
+      this.#volume = v;
       if (this.gain) {
-        this.gain.gain.value = Math.max(Math.min(__privateGet(this, _volume), 1), 0);
+        this.gain.gain.value = Math.max(Math.min(this.#volume, 1), 0);
       }
     }
     get speed() {
-      return __privateGet(this, _speed);
+      return this.#speed;
     }
     set speed(s) {
-      __privateSet(this, _speed, s);
+      this.#speed = s;
       if (this.playing) {
         this.play();
       }
     }
     get currentTime() {
-      return this.playing ? (this.ctx.currentTime - __privateGet(this, _startTime) + __privateGet(this, _offset)) * __privateGet(this, _speed) : __privateGet(this, _offset);
+      return this.playing ? (this.ctx.currentTime - this.#startTime + this.#offset) * this.#speed : this.#offset;
     }
     set currentTime(t) {
       let time;
       if (!this.buffer) {
         return;
       }
-      if (__privateGet(this, _loop)) {
+      if (this.#loop) {
         time = Math.max(t, 0) % this.buffer.duration;
       } else {
         time = Math.min(Math.max(t, 0), this.buffer.duration);
       }
-      __privateSet(this, _offset, time);
+      this.#offset = time;
       if (this.playing) {
         this.play();
       }
@@ -17887,16 +18170,6 @@
       return this.buffer.duration;
     }
   };
-  _loop = new WeakMap();
-  _volume = new WeakMap();
-  _speed = new WeakMap();
-  _startTime = new WeakMap();
-  _offset = new WeakMap();
-  _ended = new WeakSet();
-  ended_fn = function() {
-    this.playing = false;
-  };
-  __publicField(Sound, "has", has);
 
   // src/animations/index.js
   var ctx;
@@ -18708,18 +18981,22 @@
       animate_in6.stop();
     }
     switch (pos) {
+      // west
       case 3:
         ox = -two.width / 8;
         oy = center.y;
         break;
+      // east
       case 2:
         ox = two.width * 1.125;
         oy = center.y;
         break;
+      // north
       case 1:
         ox = center.x;
         oy = -two.height / 8;
         break;
+      // south
       default:
         ox = center.x;
         oy = two.height * 1.125;
@@ -19656,7 +19933,7 @@
 
   // src/index.js
   (0, import_jquery2.default)(() => {
-    const $container = (0, import_jquery2.default)("#content"), $hint = (0, import_jquery2.default)("#hint"), $credits = (0, import_jquery2.default)("#credits"), $embed = (0, import_jquery2.default)("#embed"), $merchandise = (0, import_jquery2.default)("#merchandise"), $window = (0, import_jquery2.default)(window);
+    const $container = (0, import_jquery2.default)("#content"), $hint = (0, import_jquery2.default)("#hint"), $gameCredit = (0, import_jquery2.default)("#game-credit"), $credits = (0, import_jquery2.default)("#credits"), $embed = (0, import_jquery2.default)("#embed"), $merchandise = (0, import_jquery2.default)("#merchandise"), $window = (0, import_jquery2.default)(window);
     let ui, buttons, width, height, landscape, embedding = false, playing19 = false, merchandising = false;
     const showHint = debounce(() => {
       if (embedding) {
@@ -19665,13 +19942,32 @@
       }
       $hint.fadeIn();
     }, 2e4);
+    const showGameCredit = debounce(() => {
+      if (embedding || !$gameCredit.length) {
+        return;
+      }
+      $gameCredit.stop(true, true).fadeIn(220);
+    }, 2e4);
     const hideCredits = debounce(() => {
       if (mouse.y > height - 64) {
         hideCredits();
         return;
       }
-      $container.css("top", 0);
     }, 1e3);
+    function hideGameCredit() {
+      if (!$gameCredit.length) {
+        return;
+      }
+      $gameCredit.stop(true, true).fadeOut(180);
+    }
+    function shakeScreen() {
+      if (!$container.length) {
+        return;
+      }
+      $container.removeClass("screen-shake");
+      void $container[0].offsetWidth;
+      $container.addClass("screen-shake");
+    }
     const silent = document.createElement("audio");
     silent.addEventListener("canplay", loaded, false);
     silent.src = `${path}silent.mp3`;
@@ -19744,6 +20040,7 @@
         const code = e.which || data;
         let index2;
         switch (code) {
+          // Q - P
           case 81:
             index2 = "0,0";
             break;
@@ -19774,6 +20071,7 @@
           case 80:
             index2 = "0,9";
             break;
+          // A - L
           case 65:
             index2 = "1,0";
             break;
@@ -19801,6 +20099,7 @@
           case 76:
             index2 = "1,8";
             break;
+          // Z - M
           case 90:
             index2 = "2,0";
             break;
@@ -19828,6 +20127,7 @@
       }).bind("keyup", (e) => {
         const code = e.which;
         switch (code) {
+          // SPACE
           case 32:
             index = "2,7";
             trigger(index);
@@ -19842,12 +20142,12 @@
       });
       createMobileUI();
       if (navigator.maxTouchPoints > 0) {
-        $hint.find(".message").html("Press anywhere on the screen and turn up speakers");
+        $hint.find(".message").html("Step on a rock");
       } else {
         if (!url.boolean("kiosk")) {
           $credits.css("display", "block");
         }
-        $hint.find(".message").html("Press any key, A to Z or spacebar, and turn up speakers");
+        $hint.find(".message").html("Press any key, A to Z or spacebar");
       }
       two.bind("update", () => {
         update();
@@ -20024,6 +20324,7 @@
         105: "0,7",
         107: "0,8",
         108: "0,9",
+        // SPACE
         22: "3,0",
         106: "3,0"
       };
@@ -20240,11 +20541,13 @@
       }
     }
     function triggered() {
+      shakeScreen();
       $hint.fadeOut();
+      hideGameCredit();
       showHint();
+      showGameCredit();
     }
     function showCredits() {
-      $container.css("top", `${-64}px`);
       hideCredits();
     }
   });
@@ -20252,13 +20555,17 @@
     window.console.log("Check out the code at http://github.com/jonobr1/Patatap");
   }
 })();
-/*!
- * jQuery JavaScript Library v3.7.1
- * https://jquery.com/
- *
- * Copyright OpenJS Foundation and other contributors
- * Released under the MIT license
- * https://jquery.org/license
- *
- * Date: 2023-08-28T13:37Z
- */
+/*! Bundled license information:
+
+jquery/dist/jquery.js:
+  (*!
+   * jQuery JavaScript Library v3.7.1
+   * https://jquery.com/
+   *
+   * Copyright OpenJS Foundation and other contributors
+   * Released under the MIT license
+   * https://jquery.org/license
+   *
+   * Date: 2023-08-28T13:37Z
+   *)
+*/

@@ -36,6 +36,7 @@ import './animations/glimmer.js';
 $(() => {
   const $container = $('#content'),
     $hint = $('#hint'),
+    $gameCredit = $('#game-credit'),
     $credits = $('#credits'),
     $embed = $('#embed'),
     $merchandise = $('#merchandise'),
@@ -62,13 +63,37 @@ $(() => {
     $hint.fadeIn();
   }, 20000); // Twenty Second timeout
 
+  const showGameCredit = debounce(() => {
+    if (embedding || !$gameCredit.length) {
+      return;
+    }
+    $gameCredit.stop(true, true).fadeIn(220);
+  }, 20000);
+
   const hideCredits = debounce(() => {
     if (mouse.y > height - 64) {
       hideCredits();
       return;
     }
-    $container.css('top', 0);
   }, 1000);
+
+  function hideGameCredit() {
+    if (!$gameCredit.length) {
+      return;
+    }
+    $gameCredit.stop(true, true).fadeOut(180);
+  }
+
+  function shakeScreen() {
+    if (!$container.length) {
+      return;
+    }
+
+    $container.removeClass('screen-shake');
+    // Force reflow so the animation can restart on rapid repeated inputs.
+    void $container[0].offsetWidth;
+    $container.addClass('screen-shake');
+  }
 
   const silent = document.createElement('audio');
   silent.addEventListener('canplay', loaded, false);
@@ -272,14 +297,14 @@ $(() => {
     if (navigator.maxTouchPoints > 0) {
       $hint
         .find('.message')
-        .html('Press anywhere on the screen and turn up speakers');
+        .html('Step on a rock');
     } else {
       if (!url.boolean('kiosk')) {
         $credits.css('display', 'block');
       }
       $hint
         .find('.message')
-        .html('Press any key, A to Z or spacebar, and turn up speakers');
+        .html('Press any key, A to Z or spacebar');
     }
 
     two
@@ -751,12 +776,14 @@ $(() => {
   }
 
   function triggered() {
+    shakeScreen();
     $hint.fadeOut();
+    hideGameCredit();
     showHint();
+    showGameCredit();
   }
 
   function showCredits() {
-    $container.css('top', `${-64}px`);
     hideCredits();
   }
 });

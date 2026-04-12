@@ -26,7 +26,7 @@ export const palette = [
   },
   {
     // Orange
-    background: { r: 217, g: 82, b: 31 },
+    background: { r: 217, g: 150, b: 61 },
     middleground: { r: 143, g: 74, b: 45 },
     foreground: { r: 255, g: 108, b: 87 },
     highlight: { r: 255, g: 126, b: 138 },
