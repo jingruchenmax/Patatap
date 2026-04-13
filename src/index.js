@@ -5,6 +5,7 @@ import * as TWEEN from '@tweenjs/tween.js';
 import { mouse, path, two } from './common.js';
 import palette from './animations/palette.js';
 import animations from './animations/index.js';
+import { createSerialConfig } from './serial-config.js';
 
 // Background
 import './animations/change.js';
@@ -49,7 +50,10 @@ $(() => {
     landscape,
     embedding = false,
     playing = false,
-    merchandising = false;
+    merchandising = false,
+    configVisible = false;
+
+  let serialConfig;
 
   /**
    * Append Sound Generation to Animations
@@ -125,6 +129,11 @@ $(() => {
   function initialize() {
     two.appendTo($container[0]);
     animations.updateAudio();
+    serialConfig = createSerialConfig({
+      triggerKeyLabel,
+      onSerialActivity: triggered,
+    });
+    setConfigVisible(false);
 
     $('#embed-button').click((e) => {
       e.preventDefault();
@@ -175,114 +184,45 @@ $(() => {
         showCredits();
       })
       .bind('keydown', (e, data) => {
+        const isBackquote = e.key === '`' || e.code === 'Backquote' || e.which === 192;
+        const isDisconnectShortcut = e.key === ']' || e.code === 'BracketRight' || e.which === 221;
+
+        if (isBackquote) {
+          e.preventDefault();
+          toggleConfigVisible();
+          return;
+        }
+
+        if (isDisconnectShortcut && !e.metaKey && !e.ctrlKey) {
+          e.preventDefault();
+          if (serialConfig && serialConfig.state && serialConfig.state.isConnected) {
+            serialConfig.disconnect();
+          }
+          return;
+        }
+
+        if (configVisible) {
+          return;
+        }
+
         if (e.metaKey || e.ctrlKey) {
           return;
         }
 
         e.preventDefault();
         const code = e.which || data;
-        let index;
-
-        switch (code) {
-          // Q - P
-          case 81:
-            index = '0,0';
-            break;
-          case 87:
-            index = '0,1';
-            break;
-          case 69:
-            index = '0,2';
-            break;
-          case 82:
-            index = '0,3';
-            break;
-          case 84:
-            index = '0,4';
-            break;
-          case 89:
-            index = '0,5';
-            break;
-          case 85:
-            index = '0,6';
-            break;
-          case 73:
-            index = '0,7';
-            break;
-          case 79:
-            index = '0,8';
-            break;
-          case 80:
-            index = '0,9';
-            break;
-
-          // A - L
-          case 65:
-            index = '1,0';
-            break;
-          case 83:
-            index = '1,1';
-            break;
-          case 68:
-            index = '1,2';
-            break;
-          case 70:
-            index = '1,3';
-            break;
-          case 71:
-            index = '1,4';
-            break;
-          case 72:
-            index = '1,5';
-            break;
-          case 74:
-            index = '1,6';
-            break;
-          case 75:
-            index = '1,7';
-            break;
-          case 76:
-            index = '1,8';
-            break;
-
-          // Z - M
-          case 90:
-            index = '2,0';
-            break;
-          case 88:
-            index = '2,1';
-            break;
-          case 67:
-            index = '2,2';
-            break;
-          case 86:
-            index = '2,3';
-            break;
-          case 66:
-            index = '2,4';
-            break;
-          case 78:
-            index = '2,5';
-            break;
-          case 77:
-            index = '2,6';
-            break;
-          // case 188:
-          //   index = '2,7';
-          //   break;
-        }
-
-        trigger(index);
-        triggered();
+        triggerKeyLabel(keyCodeToLabel(code));
       })
       .bind('keyup', (e) => {
+        if (configVisible) {
+          return;
+        }
+
         const code = e.which;
         switch (code) {
           // SPACE
           case 32:
-            index = '2,7';
-            trigger(index);
-            triggered();
+            triggerKeyLabel(keyCodeToLabel(code));
             break;
           case 27:
             if (merchandising) {
@@ -294,18 +234,12 @@ $(() => {
 
     createMobileUI();
 
-    if (navigator.maxTouchPoints > 0) {
-      $hint
-        .find('.message')
-        .html('Step on a rock');
-    } else {
-      if (!url.boolean('kiosk')) {
-        $credits.css('display', 'block');
-      }
-      $hint
-        .find('.message')
-        .html('Press any key, A to Z or spacebar');
+    if (!url.boolean('kiosk')) {
+      $credits.css('display', 'block');
     }
+    $hint
+      .find('.message')
+      .html('Step on a rock');
 
     two
       .bind('update', () => {
@@ -785,6 +719,122 @@ $(() => {
 
   function showCredits() {
     hideCredits();
+  }
+
+  function setConfigVisible(visible) {
+    configVisible = !!visible;
+
+    if (serialConfig) {
+      serialConfig.setVisible(configVisible);
+    }
+
+    $(document.body).toggleClass('config-mode', configVisible);
+  }
+
+  function toggleConfigVisible() {
+    setConfigVisible(!configVisible);
+  }
+
+  function keyCodeToLabel(code) {
+    switch (code) {
+      case 81:
+        return 'Q';
+      case 87:
+        return 'W';
+      case 69:
+        return 'E';
+      case 82:
+        return 'R';
+      case 84:
+        return 'T';
+      case 89:
+        return 'Y';
+      case 85:
+        return 'U';
+      case 73:
+        return 'I';
+      case 79:
+        return 'O';
+      case 80:
+        return 'P';
+      case 65:
+        return 'A';
+      case 83:
+        return 'S';
+      case 68:
+        return 'D';
+      case 70:
+        return 'F';
+      case 71:
+        return 'G';
+      case 72:
+        return 'H';
+      case 74:
+        return 'J';
+      case 75:
+        return 'K';
+      case 76:
+        return 'L';
+      case 90:
+        return 'Z';
+      case 88:
+        return 'X';
+      case 67:
+        return 'C';
+      case 86:
+        return 'V';
+      case 66:
+        return 'B';
+      case 78:
+        return 'N';
+      case 77:
+        return 'M';
+      case 32:
+        return 'SPACE';
+      default:
+        return '';
+    }
+  }
+
+  function triggerKeyLabel(label, silent, celebrate = true) {
+    const actionHash = {
+      Q: '0,0',
+      W: '0,1',
+      E: '0,2',
+      R: '0,3',
+      T: '0,4',
+      Y: '0,5',
+      U: '0,6',
+      I: '0,7',
+      O: '0,8',
+      P: '0,9',
+      A: '1,0',
+      S: '1,1',
+      D: '1,2',
+      F: '1,3',
+      G: '1,4',
+      H: '1,5',
+      J: '1,6',
+      K: '1,7',
+      L: '1,8',
+      Z: '2,0',
+      X: '2,1',
+      C: '2,2',
+      V: '2,3',
+      B: '2,4',
+      N: '2,5',
+      M: '2,6',
+      SPACE: '2,7',
+    }[label];
+
+    if (!actionHash) {
+      return;
+    }
+
+    trigger(actionHash, silent);
+    if (celebrate) {
+      triggered();
+    }
   }
 });
 

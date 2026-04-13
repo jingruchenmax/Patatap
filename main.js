@@ -1870,10 +1870,10 @@
             // Remove a callback from the list
             remove: function() {
               jQuery.each(arguments, function(_2, arg) {
-                var index2;
-                while ((index2 = jQuery.inArray(arg, list2, index2)) > -1) {
-                  list2.splice(index2, 1);
-                  if (index2 <= firingIndex) {
+                var index;
+                while ((index = jQuery.inArray(arg, list2, index)) > -1) {
+                  list2.splice(index, 1);
+                  if (index <= firingIndex) {
                     firingIndex--;
                   }
                 }
@@ -2640,33 +2640,33 @@
           return display;
         }
         function showHide(elements, show) {
-          var display, elem, values = [], index2 = 0, length = elements.length;
-          for (; index2 < length; index2++) {
-            elem = elements[index2];
+          var display, elem, values = [], index = 0, length = elements.length;
+          for (; index < length; index++) {
+            elem = elements[index];
             if (!elem.style) {
               continue;
             }
             display = elem.style.display;
             if (show) {
               if (display === "none") {
-                values[index2] = dataPriv.get(elem, "display") || null;
-                if (!values[index2]) {
+                values[index] = dataPriv.get(elem, "display") || null;
+                if (!values[index]) {
                   elem.style.display = "";
                 }
               }
               if (elem.style.display === "" && isHiddenWithinTree(elem)) {
-                values[index2] = getDefaultDisplay(elem);
+                values[index] = getDefaultDisplay(elem);
               }
             } else {
               if (display !== "none") {
-                values[index2] = "none";
+                values[index] = "none";
                 dataPriv.set(elem, "display", display);
               }
             }
           }
-          for (index2 = 0; index2 < length; index2++) {
-            if (values[index2] != null) {
-              elements[index2].style.display = values[index2];
+          for (index = 0; index < length; index++) {
+            if (values[index] != null) {
+              elements[index].style.display = values[index];
             }
           }
           return elements;
@@ -3416,10 +3416,10 @@
           args = flat(args);
           var fragment, first, scripts, hasScripts, node, doc, i = 0, l = collection.length, iNoClone = l - 1, value = args[0], valueIsFunction = isFunction(value);
           if (valueIsFunction || l > 1 && typeof value === "string" && !support.checkClone && rchecked.test(value)) {
-            return collection.each(function(index2) {
-              var self2 = collection.eq(index2);
+            return collection.each(function(index) {
+              var self2 = collection.eq(index);
               if (valueIsFunction) {
-                args[0] = value.call(this, index2, self2.html());
+                args[0] = value.call(this, index, self2.html());
               }
               domManip(self2, args, callback, ignored);
             });
@@ -4193,9 +4193,9 @@
           return attrs;
         }
         function createTween(value, prop, animation19) {
-          var tween2, collection = (Animation.tweeners[prop] || []).concat(Animation.tweeners["*"]), index2 = 0, length = collection.length;
-          for (; index2 < length; index2++) {
-            if (tween2 = collection[index2].call(animation19, prop, value)) {
+          var tween2, collection = (Animation.tweeners[prop] || []).concat(Animation.tweeners["*"]), index = 0, length = collection.length;
+          for (; index < length; index++) {
+            if (tween2 = collection[index].call(animation19, prop, value)) {
               return tween2;
             }
           }
@@ -4319,27 +4319,27 @@
           }
         }
         function propFilter(props, specialEasing) {
-          var index2, name2, easing, value, hooks;
-          for (index2 in props) {
-            name2 = camelCase(index2);
+          var index, name2, easing, value, hooks;
+          for (index in props) {
+            name2 = camelCase(index);
             easing = specialEasing[name2];
-            value = props[index2];
+            value = props[index];
             if (Array.isArray(value)) {
               easing = value[1];
-              value = props[index2] = value[0];
+              value = props[index] = value[0];
             }
-            if (index2 !== name2) {
+            if (index !== name2) {
               props[name2] = value;
-              delete props[index2];
+              delete props[index];
             }
             hooks = jQuery.cssHooks[name2];
             if (hooks && "expand" in hooks) {
               value = hooks.expand(value);
               delete props[name2];
-              for (index2 in value) {
-                if (!(index2 in props)) {
-                  props[index2] = value[index2];
-                  specialEasing[index2] = easing;
+              for (index in value) {
+                if (!(index in props)) {
+                  props[index] = value[index];
+                  specialEasing[index] = easing;
                 }
               }
             } else {
@@ -4348,15 +4348,15 @@
           }
         }
         function Animation(elem, properties, options6) {
-          var result, stopped, index2 = 0, length = Animation.prefilters.length, deferred = jQuery.Deferred().always(function() {
+          var result, stopped, index = 0, length = Animation.prefilters.length, deferred = jQuery.Deferred().always(function() {
             delete tick.elem;
           }), tick = function() {
             if (stopped) {
               return false;
             }
-            var currentTime = fxNow || createFxNow(), remaining = Math.max(0, animation19.startTime + animation19.duration - currentTime), temp2 = remaining / animation19.duration || 0, percent = 1 - temp2, index3 = 0, length2 = animation19.tweens.length;
-            for (; index3 < length2; index3++) {
-              animation19.tweens[index3].run(percent);
+            var currentTime = fxNow || createFxNow(), remaining = Math.max(0, animation19.startTime + animation19.duration - currentTime), temp2 = remaining / animation19.duration || 0, percent = 1 - temp2, index2 = 0, length2 = animation19.tweens.length;
+            for (; index2 < length2; index2++) {
+              animation19.tweens[index2].run(percent);
             }
             deferred.notifyWith(elem, [animation19, percent, remaining]);
             if (percent < 1 && length2) {
@@ -4391,13 +4391,13 @@
               return tween2;
             },
             stop: function(gotoEnd) {
-              var index3 = 0, length2 = gotoEnd ? animation19.tweens.length : 0;
+              var index2 = 0, length2 = gotoEnd ? animation19.tweens.length : 0;
               if (stopped) {
                 return this;
               }
               stopped = true;
-              for (; index3 < length2; index3++) {
-                animation19.tweens[index3].run(1);
+              for (; index2 < length2; index2++) {
+                animation19.tweens[index2].run(1);
               }
               if (gotoEnd) {
                 deferred.notifyWith(elem, [animation19, 1, 0]);
@@ -4409,8 +4409,8 @@
             }
           }), props = animation19.props;
           propFilter(props, animation19.opts.specialEasing);
-          for (; index2 < length; index2++) {
-            result = Animation.prefilters[index2].call(animation19, elem, props, animation19.opts);
+          for (; index < length; index++) {
+            result = Animation.prefilters[index].call(animation19, elem, props, animation19.opts);
             if (result) {
               if (isFunction(result.stop)) {
                 jQuery._queueHooks(animation19.elem, animation19.opts.queue).stop = result.stop.bind(result);
@@ -4447,9 +4447,9 @@
             } else {
               props = props.match(rnothtmlwhite);
             }
-            var prop, index2 = 0, length = props.length;
-            for (; index2 < length; index2++) {
-              prop = props[index2];
+            var prop, index = 0, length = props.length;
+            for (; index < length; index++) {
+              prop = props[index];
               Animation.tweeners[prop] = Animation.tweeners[prop] || [];
               Animation.tweeners[prop].unshift(callback);
             }
@@ -4523,23 +4523,23 @@
               this.queue(type || "fx", []);
             }
             return this.each(function() {
-              var dequeue = true, index2 = type != null && type + "queueHooks", timers = jQuery.timers, data = dataPriv.get(this);
-              if (index2) {
-                if (data[index2] && data[index2].stop) {
-                  stopQueue(data[index2]);
+              var dequeue = true, index = type != null && type + "queueHooks", timers = jQuery.timers, data = dataPriv.get(this);
+              if (index) {
+                if (data[index] && data[index].stop) {
+                  stopQueue(data[index]);
                 }
               } else {
-                for (index2 in data) {
-                  if (data[index2] && data[index2].stop && rrun.test(index2)) {
-                    stopQueue(data[index2]);
+                for (index in data) {
+                  if (data[index] && data[index].stop && rrun.test(index)) {
+                    stopQueue(data[index]);
                   }
                 }
               }
-              for (index2 = timers.length; index2--; ) {
-                if (timers[index2].elem === this && (type == null || timers[index2].queue === type)) {
-                  timers[index2].anim.stop(gotoEnd);
+              for (index = timers.length; index--; ) {
+                if (timers[index].elem === this && (type == null || timers[index].queue === type)) {
+                  timers[index].anim.stop(gotoEnd);
                   dequeue = false;
-                  timers.splice(index2, 1);
+                  timers.splice(index, 1);
                 }
               }
               if (dequeue || !gotoEnd) {
@@ -4552,21 +4552,21 @@
               type = type || "fx";
             }
             return this.each(function() {
-              var index2, data = dataPriv.get(this), queue = data[type + "queue"], hooks = data[type + "queueHooks"], timers = jQuery.timers, length = queue ? queue.length : 0;
+              var index, data = dataPriv.get(this), queue = data[type + "queue"], hooks = data[type + "queueHooks"], timers = jQuery.timers, length = queue ? queue.length : 0;
               data.finish = true;
               jQuery.queue(this, type, []);
               if (hooks && hooks.stop) {
                 hooks.stop.call(this, true);
               }
-              for (index2 = timers.length; index2--; ) {
-                if (timers[index2].elem === this && timers[index2].queue === type) {
-                  timers[index2].anim.stop(true);
-                  timers.splice(index2, 1);
+              for (index = timers.length; index--; ) {
+                if (timers[index].elem === this && timers[index].queue === type) {
+                  timers[index].anim.stop(true);
+                  timers.splice(index, 1);
                 }
               }
-              for (index2 = 0; index2 < length; index2++) {
-                if (queue[index2] && queue[index2].finish) {
-                  queue[index2].finish.call(this);
+              for (index = 0; index < length; index++) {
+                if (queue[index] && queue[index].finish) {
+                  queue[index].finish.call(this);
                 }
               }
               delete data.finish;
@@ -5005,15 +5005,15 @@
             },
             select: {
               get: function(elem) {
-                var value, option, i, options6 = elem.options, index2 = elem.selectedIndex, one = elem.type === "select-one", values = one ? null : [], max5 = one ? index2 + 1 : options6.length;
-                if (index2 < 0) {
+                var value, option, i, options6 = elem.options, index = elem.selectedIndex, one = elem.type === "select-one", values = one ? null : [], max5 = one ? index + 1 : options6.length;
+                if (index < 0) {
                   i = max5;
                 } else {
-                  i = one ? index2 : 0;
+                  i = one ? index : 0;
                 }
                 for (; i < max5; i++) {
                   option = options6[i];
-                  if ((option.selected || i === index2) && // Don't return options that are disabled or in a disabled optgroup
+                  if ((option.selected || i === index) && // Don't return options that are disabled or in a disabled optgroup
                   !option.disabled && (!option.parentNode.disabled || !nodeName(option.parentNode, "optgroup"))) {
                     value = jQuery(option).val();
                     if (one) {
@@ -6376,7 +6376,7 @@
   });
 
   // src/index.js
-  var import_jquery2 = __toESM(require_jquery());
+  var import_jquery3 = __toESM(require_jquery());
 
   // src/underscore.js
   function each(list2, func) {
@@ -8268,9 +8268,9 @@
         if (!(child && child.id)) {
           continue;
         }
-        const index2 = Array.prototype.indexOf.call(this.children, child);
-        if (index2 >= 0) {
-          this.children.splice(index2, 1);
+        const index = Array.prototype.indexOf.call(this.children, child);
+        if (index >= 0) {
+          this.children.splice(index, 1);
         }
         this.children.push(child);
       }
@@ -8292,9 +8292,9 @@
         if (!object || !this.children.ids[object.id]) {
           continue;
         }
-        const index2 = this.children.indexOf(object);
-        if (index2 >= 0) {
-          this.children.splice(index2, 1);
+        const index = this.children.indexOf(object);
+        if (index >= 0) {
+          this.children.splice(index, 1);
         }
       }
       return this;
@@ -8636,14 +8636,14 @@
   };
   function replaceParent(child, newParent) {
     const parent = child.parent;
-    let index2;
+    let index;
     if (parent === newParent) {
       add2();
       return;
     }
     if (parent && parent.children.ids[child.id]) {
-      index2 = Array.prototype.indexOf.call(parent.children, child);
-      parent.children.splice(index2, 1);
+      index = Array.prototype.indexOf.call(parent.children, child);
+      parent.children.splice(index, 1);
       splice();
     }
     if (newParent) {
@@ -8660,15 +8660,15 @@
     delete child.parent;
     function add2() {
       if (newParent.subtractions.length > 0) {
-        index2 = Array.prototype.indexOf.call(newParent.subtractions, child);
-        if (index2 >= 0) {
-          newParent.subtractions.splice(index2, 1);
+        index = Array.prototype.indexOf.call(newParent.subtractions, child);
+        if (index >= 0) {
+          newParent.subtractions.splice(index, 1);
         }
       }
       if (newParent.additions.length > 0) {
-        index2 = Array.prototype.indexOf.call(newParent.additions, child);
-        if (index2 >= 0) {
-          newParent.additions.splice(index2, 1);
+        index = Array.prototype.indexOf.call(newParent.additions, child);
+        if (index >= 0) {
+          newParent.additions.splice(index, 1);
         }
       }
       child.parent = newParent;
@@ -8676,12 +8676,12 @@
       newParent._flagAdditions = true;
     }
     function splice() {
-      index2 = Array.prototype.indexOf.call(parent.additions, child);
-      if (index2 >= 0) {
-        parent.additions.splice(index2, 1);
+      index = Array.prototype.indexOf.call(parent.additions, child);
+      if (index >= 0) {
+        parent.additions.splice(index, 1);
       }
-      index2 = Array.prototype.indexOf.call(parent.subtractions, child);
-      if (index2 < 0) {
+      index = Array.prototype.indexOf.call(parent.subtractions, child);
+      if (index < 0) {
         parent.subtractions.push(child);
         parent._flagSubtractions = true;
       }
@@ -10358,15 +10358,15 @@
       },
       set: function(image) {
         const tag = Texture.getTag(image);
-        let index2;
+        let index;
         switch (tag) {
           case "canvas":
-            index2 = "#" + image.id;
+            index = "#" + image.id;
             break;
           default:
-            index2 = image.src;
+            index = image.src;
         }
-        if (Texture.ImageRegistry.contains(index2)) {
+        if (Texture.ImageRegistry.contains(index)) {
           this._image = Texture.ImageRegistry.get(image.src);
         } else {
           this._image = image;
@@ -11427,7 +11427,7 @@
       const cols = this._columns;
       const rows = this._rows;
       let width, height, elapsed, amount12, duration2;
-      let index2, iw, ih, frames;
+      let index, iw, ih, frames;
       if (effect) {
         if (this._flagColumns || this._flagRows) {
           this._amount = this._columns * this._rows;
@@ -11462,11 +11462,11 @@
             } else {
               elapsed = Math.min(elapsed, duration2);
             }
-            index2 = lerp(this._firstFrame, frames, elapsed / duration2);
-            index2 = Math.floor(index2);
-            if (index2 !== this._index) {
-              this._index = index2;
-              if (index2 >= this._lastFrame - 1 && this._onLastFrame) {
+            index = lerp(this._firstFrame, frames, elapsed / duration2);
+            index = Math.floor(index);
+            if (index !== this._index) {
+              this._index = index;
+              if (index >= this._lastFrame - 1 && this._onLastFrame) {
                 this._onLastFrame();
               }
             }
@@ -12485,9 +12485,9 @@
     const attributes = node.getAttributeNames();
     for (let i = 0; i < reservedAttributesToRemove.length; i++) {
       const keyword = reservedAttributesToRemove[i];
-      const index2 = Array.prototype.indexOf.call(attributes, keyword);
-      if (index2 >= 0) {
-        attributes.splice(index2, 1);
+      const index = Array.prototype.indexOf.call(attributes, keyword);
+      if (index >= 0) {
+        attributes.splice(index, 1);
       }
     }
     return attributes;
@@ -13504,7 +13504,7 @@
     _update() {
       const effect = this._textures;
       let width, height, elapsed, amount12, duration2, texture;
-      let index2, frames;
+      let index, frames;
       if (effect) {
         if (this._flagTextures) {
           this._amount = effect.length;
@@ -13525,10 +13525,10 @@
           } else {
             elapsed = Math.min(elapsed, duration2);
           }
-          index2 = lerp(this._firstFrame, frames, elapsed / duration2);
-          index2 = Math.floor(index2);
-          if (index2 !== this._index) {
-            this._index = index2;
+          index = lerp(this._firstFrame, frames, elapsed / duration2);
+          index = Math.floor(index);
+          if (index !== this._index) {
+            this._index = index;
             texture = effect[this._index];
             if (texture.loaded) {
               width = texture.image.width;
@@ -13540,7 +13540,7 @@
                 this.height = height;
               }
               this.fill = texture;
-              if (index2 >= this._lastFrame - 1 && this._onLastFrame) {
+              if (index >= this._lastFrame - 1 && this._onLastFrame) {
                 this._onLastFrame();
               }
             }
@@ -18266,6 +18266,755 @@
     list
   };
 
+  // src/serial-config.js
+  var import_jquery2 = __toESM(require_jquery());
+  var STORAGE_KEY = "serial-channel-bindings";
+  var SETTINGS_KEY = "serial-config-settings";
+  var CHANNEL_COUNT = 16;
+  var DEFAULT_BAUD_RATE = 115200;
+  var DEFAULT_TRIGGER_COOLDOWN_MS = 1e3;
+  var DEFAULT_SUSTAIN_REPEATS = 3;
+  var DEFAULT_BINDINGS = [
+    "Q",
+    "W",
+    "E",
+    "R",
+    "T",
+    "Y",
+    "U",
+    "I",
+    "O",
+    "P",
+    "A",
+    "S",
+    "D",
+    "F",
+    "G",
+    "H"
+  ];
+  var KEY_OPTIONS = [
+    "",
+    "Q",
+    "W",
+    "E",
+    "R",
+    "T",
+    "Y",
+    "U",
+    "I",
+    "O",
+    "P",
+    "A",
+    "S",
+    "D",
+    "F",
+    "G",
+    "H",
+    "J",
+    "K",
+    "L",
+    "Z",
+    "X",
+    "C",
+    "V",
+    "B",
+    "N",
+    "M",
+    "SPACE"
+  ];
+  function isStorageAvailable() {
+    try {
+      return typeof window !== "undefined" && !!window.localStorage;
+    } catch (_error) {
+      return false;
+    }
+  }
+  function loadStoredState() {
+    const defaults2 = {
+      bindings: DEFAULT_BINDINGS.slice(),
+      baudRate: DEFAULT_BAUD_RATE,
+      triggerCooldownMs: DEFAULT_TRIGGER_COOLDOWN_MS,
+      sustainRepeats: DEFAULT_SUSTAIN_REPEATS,
+      autoReconnect: false
+    };
+    if (!isStorageAvailable()) {
+      return defaults2;
+    }
+    try {
+      const storedSettings = window.localStorage.getItem(SETTINGS_KEY);
+      if (storedSettings) {
+        const parsed = JSON.parse(storedSettings);
+        return {
+          bindings: normalizeBindings(parsed.bindings),
+          baudRate: Number.parseInt(parsed.baudRate, 10) || defaults2.baudRate,
+          triggerCooldownMs: Number.parseInt(parsed.triggerCooldownMs, 10) || defaults2.triggerCooldownMs,
+          sustainRepeats: normalizeSustainRepeats(
+            parsed.sustainRepeats ?? parsed.chargeFactor
+          ),
+          autoReconnect: typeof parsed.autoReconnect === "boolean" ? parsed.autoReconnect : defaults2.autoReconnect
+        };
+      }
+      const legacyBindings = window.localStorage.getItem(STORAGE_KEY);
+      if (legacyBindings) {
+        return {
+          ...defaults2,
+          bindings: normalizeBindings(JSON.parse(legacyBindings))
+        };
+      }
+    } catch (_error) {
+      return defaults2;
+    }
+    return defaults2;
+  }
+  function saveStoredState(settings) {
+    if (!isStorageAvailable()) {
+      return;
+    }
+    const snapshot = {
+      bindings: normalizeBindings(settings.bindings),
+      baudRate: settings.baudRate,
+      triggerCooldownMs: settings.triggerCooldownMs,
+      sustainRepeats: settings.sustainRepeats,
+      autoReconnect: settings.autoReconnect
+    };
+    window.localStorage.setItem(SETTINGS_KEY, JSON.stringify(snapshot));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot.bindings));
+  }
+  function normalizeKeyLabel(value) {
+    if (!value) {
+      return "";
+    }
+    const label = String(value).trim().toUpperCase();
+    if (label === "SPACE" || label === "SPACEBAR") {
+      return "SPACE";
+    }
+    return /^[A-Z]$/.test(label) ? label : "";
+  }
+  function normalizeSustainRepeats(value) {
+    const repeats = Number.parseInt(value, 10);
+    if (Number.isNaN(repeats) || repeats < 0) {
+      return DEFAULT_SUSTAIN_REPEATS;
+    }
+    return repeats;
+  }
+  function normalizeBindings(bindings) {
+    const result = DEFAULT_BINDINGS.slice();
+    if (Array.isArray(bindings)) {
+      for (let i = 0; i < CHANNEL_COUNT; i += 1) {
+        result[i] = normalizeKeyLabel(bindings[i]);
+      }
+      return result;
+    }
+    if (bindings && typeof bindings === "object") {
+      for (let i = 0; i < CHANNEL_COUNT; i += 1) {
+        const channel = i + 1;
+        result[i] = normalizeKeyLabel(
+          bindings[channel] || bindings[String(channel)] || DEFAULT_BINDINGS[i]
+        );
+      }
+    }
+    return result;
+  }
+  function saveBindings(bindings) {
+    const current2 = loadStoredState();
+    saveStoredState({
+      ...current2,
+      bindings
+    });
+  }
+  function parseSensorLine(line2) {
+    const trimmed = String(line2 || "").trim();
+    const sensorIds = /* @__PURE__ */ new Set();
+    if (!trimmed || trimmed.toLowerCase() === "none") {
+      return sensorIds;
+    }
+    trimmed.split(",").forEach((part) => {
+      const id = parseInt(part.trim(), 10);
+      if (!Number.isNaN(id) && id >= 1 && id <= CHANNEL_COUNT) {
+        sensorIds.add(id);
+      }
+    });
+    return sensorIds;
+  }
+  function buildKeyOptions(selectedValue) {
+    return KEY_OPTIONS.map((keyLabel) => {
+      const label = keyLabel === "SPACE" ? "Space" : keyLabel || "Unassigned";
+      const value = keyLabel;
+      const selected = value === selectedValue ? " selected" : "";
+      return `<option value="${value}"${selected}>${label}</option>`;
+    }).join("");
+  }
+  function formatChannelLabel(channel) {
+    return String(channel).padStart(2, "0");
+  }
+  function createSerialConfig({
+    triggerKeyLabel,
+    onSerialActivity,
+    panelSelector = "#config-panel",
+    baudRate = DEFAULT_BAUD_RATE
+  } = {}) {
+    const isSupported = typeof navigator !== "undefined" && "serial" in navigator;
+    const $panel = (0, import_jquery2.default)(panelSelector);
+    const storedState = loadStoredState();
+    const state = {
+      bindings: storedState.bindings,
+      activeChannels: /* @__PURE__ */ new Set(),
+      previousActiveKeys: /* @__PURE__ */ new Set(),
+      isConnected: false,
+      lastLine: "",
+      error: "",
+      port: null,
+      reader: null,
+      readLoopActive: false,
+      baudRate: storedState.baudRate || baudRate,
+      triggerCooldownMs: storedState.triggerCooldownMs,
+      sustainRepeats: normalizeSustainRepeats(storedState.sustainRepeats),
+      autoReconnect: storedState.autoReconnect,
+      lastTriggeredAtByKey: /* @__PURE__ */ Object.create(null),
+      releaseTimerByKey: /* @__PURE__ */ Object.create(null)
+    };
+    function setPanelVisible(visible) {
+      if (!$panel.length) {
+        return;
+      }
+      if (visible) {
+        $panel.removeAttr("hidden");
+      } else {
+        $panel.attr("hidden", "hidden");
+      }
+    }
+    function updateSupportCopy() {
+      if (!$panel.length) {
+        return;
+      }
+      $panel.find("#serial-support").text(
+        isSupported ? "Web Serial supported" : "Web Serial is not supported in this browser"
+      );
+    }
+    function updateStatus() {
+      if (!$panel.length) {
+        return;
+      }
+      const connectionText = state.isConnected ? "Connected" : "Disconnected";
+      const lastLineText = state.lastLine || "Waiting for serial data.";
+      const errorText = state.error || "";
+      const autoReconnectText = state.autoReconnect ? "enabled" : "disabled";
+      $panel.find("#serial-connection").text(connectionText);
+      $panel.find("#serial-last-line").text(lastLineText);
+      $panel.find("#serial-error").text(errorText);
+      $panel.find("#serial-baudrate-value").text(String(state.baudRate));
+      $panel.find("#serial-cooldown-value").text(`${state.triggerCooldownMs} ms`);
+      $panel.find("#serial-sustain-repeats-value").text(String(state.sustainRepeats));
+      $panel.find("#serial-autoreconnect-value").text(autoReconnectText);
+      $panel.find("#serial-connect").prop("disabled", !isSupported || state.isConnected);
+      $panel.find("#serial-disconnect").prop("disabled", !state.isConnected);
+    }
+    function updateActiveChannels() {
+      if (!$panel.length) {
+        return;
+      }
+      const activeLabels = Array.from(state.activeChannels).sort((a2, b2) => a2 - b2).map((channel) => `<span class="config-chip config-chip--active">${formatChannelLabel(channel)}</span>`).join("");
+      $panel.find("#serial-active").html(
+        activeLabels || '<span class="config-chip">No active channels</span>'
+      );
+      $panel.find("[data-channel-row]").each((_2, element) => {
+        const $row = (0, import_jquery2.default)(element);
+        const channel = parseInt($row.attr("data-channel-row"), 10);
+        $row.toggleClass("is-active", state.activeChannels.has(channel));
+      });
+    }
+    function updateBindingsUI() {
+      if (!$panel.length) {
+        return;
+      }
+      $panel.find("[data-channel-select]").each((_2, element) => {
+        const $select = (0, import_jquery2.default)(element);
+        const channel = parseInt($select.attr("data-channel-select"), 10);
+        $select.val(state.bindings[channel - 1] || "");
+      });
+      $panel.find("[data-channel-preview]").each((_2, element) => {
+        const $button = (0, import_jquery2.default)(element);
+        const channel = parseInt($button.attr("data-channel-preview"), 10);
+        const keyLabel = state.bindings[channel - 1] || "";
+        $button.text(keyLabel ? `Preview ${keyLabel}` : "Preview");
+        $button.prop("disabled", !keyLabel);
+      });
+    }
+    function renderPanel() {
+      if (!$panel.length) {
+        return;
+      }
+      const channelRows = [];
+      for (let channel = 1; channel <= CHANNEL_COUNT; channel += 1) {
+        const keyLabel = state.bindings[channel - 1] || "";
+        channelRows.push(`
+        <div class="config-row" data-channel-row="${channel}">
+          <div class="config-row__channel">
+            <span class="config-row__badge">${formatChannelLabel(channel)}</span>
+            <div class="config-row__meta">
+              <strong>Channel ${channel}</strong>
+              <span>Serial input ${channel}</span>
+            </div>
+          </div>
+          <div class="config-row__controls">
+            <select data-channel-select="${channel}" aria-label="Channel ${channel} key binding">
+              ${buildKeyOptions(keyLabel)}
+            </select>
+            <button type="button" class="config-button config-button--ghost" data-channel-preview="${channel}">
+              ${keyLabel ? `Preview ${keyLabel}` : "Preview"}
+            </button>
+          </div>
+        </div>
+      `);
+      }
+      $panel.html(`
+      <div class="config-panel__shell">
+        <div class="config-panel__hero">
+          <p class="config-panel__eyebrow">Configuration mode</p>
+          <h1>Serial to action bindings</h1>
+          <p class="config-panel__copy">
+            Connect a Web Serial peripheral, watch the parsed channel IDs, and map each channel
+            to a keyboard action. The selected key reuses the game's existing audio and animation
+            trigger.
+          </p>
+        </div>
+
+        <div class="config-panel__toolbar">
+          <button type="button" class="config-button config-button--primary" id="serial-connect">
+            Connect device
+          </button>
+          <button type="button" class="config-button" id="serial-disconnect">
+            Disconnect
+          </button>
+          <button type="button" class="config-button" id="serial-reset">
+            Reset defaults
+          </button>
+          <span class="config-panel__support" id="serial-support"></span>
+        </div>
+
+        <div class="config-panel__controls">
+          <label class="config-field">
+            <span class="config-field__label">Baud rate</span>
+            <input type="number" min="300" step="100" id="serial-baudrate" value="${state.baudRate}">
+          </label>
+          <label class="config-field">
+            <span class="config-field__label">Cooldown</span>
+            <div class="config-field__inline">
+              <input type="number" min="0" step="50" id="serial-cooldown" value="${state.triggerCooldownMs}">
+              <span class="config-field__suffix">ms</span>
+            </div>
+          </label>
+          <label class="config-field config-field--checkbox">
+            <input type="checkbox" id="serial-autoreconnect" ${state.autoReconnect ? "checked" : ""}>
+            <span class="config-field__text-block">
+              <span class="config-field__label-text">Auto-reconnect to the last authorized device</span>
+              <span class="config-field__state" id="serial-autoreconnect-value">${state.autoReconnect ? "enabled" : "disabled"}</span>
+            </span>
+          </label>
+          <label class="config-field">
+            <span class="config-field__label">Sustain repeats</span>
+            <input type="number" min="0" step="1" id="serial-sustain-repeats" value="${state.sustainRepeats}">
+          </label>
+        </div>
+
+        <div class="config-panel__status">
+          <div class="config-panel__status-item">
+            <span class="config-panel__label">Connection</span>
+            <strong id="serial-connection">Disconnected</strong>
+          </div>
+          <div class="config-panel__status-item">
+            <span class="config-panel__label">Baud rate</span>
+            <strong id="serial-baudrate-value">${state.baudRate}</strong>
+          </div>
+          <div class="config-panel__status-item">
+            <span class="config-panel__label">Cooldown</span>
+            <strong id="serial-cooldown-value">${state.triggerCooldownMs} ms</strong>
+          </div>
+          <div class="config-panel__status-item">
+            <span class="config-panel__label">Sustain repeats</span>
+            <strong id="serial-sustain-repeats-value">${state.sustainRepeats}</strong>
+          </div>
+          <div class="config-panel__status-item config-panel__status-item--wide">
+            <span class="config-panel__label">Last line</span>
+            <code id="serial-last-line">Waiting for serial data.</code>
+          </div>
+          <div class="config-panel__status-item config-panel__status-item--wide">
+            <span class="config-panel__label">Active channels</span>
+            <div class="config-panel__chips" id="serial-active">
+              <span class="config-chip">No active channels</span>
+            </div>
+          </div>
+          <div class="config-panel__status-item config-panel__status-item--wide config-panel__error" id="serial-error"></div>
+        </div>
+
+        <div class="config-panel__legend">
+          Channel numbers are read from each serial line. Choose which keyboard action should fire
+          when that channel appears. Shortcuts: press Backquote to toggle this panel, or ] to disconnect.
+        </div>
+
+        <div class="config-panel__grid" id="serial-mapping-grid">
+          ${channelRows.join("")}
+        </div>
+      </div>
+    `);
+      $panel.find("[data-channel-select]").on("change", (event) => {
+        const $select = (0, import_jquery2.default)(event.currentTarget);
+        const channel = parseInt($select.attr("data-channel-select"), 10);
+        setBinding(channel, $select.val());
+      });
+      $panel.find("[data-channel-preview]").on("click", (event) => {
+        const $button = (0, import_jquery2.default)(event.currentTarget);
+        const channel = parseInt($button.attr("data-channel-preview"), 10);
+        previewChannel(channel);
+      });
+      $panel.find("#serial-connect").on("click", () => {
+        connect();
+      });
+      $panel.find("#serial-disconnect").on("click", () => {
+        disconnect();
+      });
+      $panel.find("#serial-reset").on("click", () => {
+        state.bindings = DEFAULT_BINDINGS.slice();
+        state.baudRate = DEFAULT_BAUD_RATE;
+        state.triggerCooldownMs = DEFAULT_TRIGGER_COOLDOWN_MS;
+        state.sustainRepeats = DEFAULT_SUSTAIN_REPEATS;
+        state.autoReconnect = false;
+        saveBindings(state.bindings);
+        saveStoredState(state);
+        $panel.find("#serial-baudrate").val(state.baudRate);
+        $panel.find("#serial-cooldown").val(state.triggerCooldownMs);
+        $panel.find("#serial-sustain-repeats").val(state.sustainRepeats);
+        $panel.find("#serial-autoreconnect").prop("checked", false);
+        updateBindingsUI();
+        updateStatus();
+      });
+      $panel.find("#serial-baudrate").on("change input", (event) => {
+        const value = Number.parseInt((0, import_jquery2.default)(event.currentTarget).val(), 10);
+        state.baudRate = Number.isNaN(value) ? DEFAULT_BAUD_RATE : Math.max(300, value);
+        saveStoredState(state);
+        updateStatus();
+      });
+      $panel.find("#serial-cooldown").on("change input", (event) => {
+        const value = Number.parseInt((0, import_jquery2.default)(event.currentTarget).val(), 10);
+        state.triggerCooldownMs = Number.isNaN(value) ? DEFAULT_TRIGGER_COOLDOWN_MS : Math.max(0, value);
+        saveStoredState(state);
+        updateStatus();
+      });
+      $panel.find("#serial-sustain-repeats").on("change input", (event) => {
+        state.sustainRepeats = normalizeSustainRepeats((0, import_jquery2.default)(event.currentTarget).val());
+        saveStoredState(state);
+        updateStatus();
+      });
+      $panel.find("#serial-autoreconnect").on("change", (event) => {
+        state.autoReconnect = (0, import_jquery2.default)(event.currentTarget).is(":checked");
+        saveStoredState(state);
+        updateStatus();
+      });
+      updateSupportCopy();
+      updateStatus();
+      updateBindingsUI();
+      updateActiveChannels();
+    }
+    function setBinding(channel, keyLabel) {
+      const normalized = normalizeKeyLabel(keyLabel);
+      if (channel < 1 || channel > CHANNEL_COUNT) {
+        return;
+      }
+      state.bindings[channel - 1] = normalized;
+      saveStoredState(state);
+      updateBindingsUI();
+    }
+    function getBinding(channel) {
+      if (channel < 1 || channel > CHANNEL_COUNT) {
+        return "";
+      }
+      return state.bindings[channel - 1] || "";
+    }
+    function previewChannel(channel) {
+      const keyLabel = getBinding(channel);
+      if (!keyLabel || typeof triggerKeyLabel !== "function") {
+        return;
+      }
+      triggerKeyLabel(keyLabel, false);
+    }
+    function clearReleaseTimer(keyLabel) {
+      const job = state.releaseTimerByKey[keyLabel];
+      if (job && job.timer) {
+        clearTimeout(job.timer);
+      }
+      if (job) {
+        delete state.releaseTimerByKey[keyLabel];
+      }
+    }
+    function resetChargeState() {
+      Object.keys(state.releaseTimerByKey).forEach((keyLabel) => {
+        clearReleaseTimer(keyLabel);
+      });
+      state.previousActiveKeys = /* @__PURE__ */ new Set();
+    }
+    function fireChargedTrigger(keyLabel) {
+      if (!keyLabel || typeof triggerKeyLabel !== "function") {
+        return false;
+      }
+      triggerKeyLabel(keyLabel, false, false);
+      return true;
+    }
+    function getCooldownRemainingMs(keyLabel) {
+      const lastTriggeredAt = state.lastTriggeredAtByKey[keyLabel] || 0;
+      const remaining = state.triggerCooldownMs - (Date.now() - lastTriggeredAt);
+      return Math.max(0, remaining);
+    }
+    function scheduleDrainStep(keyLabel) {
+      const job = state.releaseTimerByKey[keyLabel];
+      if (!job || job.remaining <= 0) {
+        delete state.releaseTimerByKey[keyLabel];
+        return;
+      }
+      const delay = Math.max(job.delay, getCooldownRemainingMs(keyLabel));
+      job.timer = setTimeout(() => {
+        const currentJob = state.releaseTimerByKey[keyLabel];
+        if (!currentJob) {
+          return;
+        }
+        if (!shouldTriggerKey(keyLabel)) {
+          scheduleDrainStep(keyLabel);
+          return;
+        }
+        fireChargedTrigger(keyLabel);
+        currentJob.remaining -= 1;
+        if (currentJob.remaining <= 0) {
+          delete state.releaseTimerByKey[keyLabel];
+          if (typeof onSerialActivity === "function") {
+            onSerialActivity();
+          }
+          return;
+        }
+        scheduleDrainStep(keyLabel);
+      }, delay);
+    }
+    function scheduleSustain(keyLabel) {
+      clearReleaseTimer(keyLabel);
+      const sustainRepeats = state.sustainRepeats;
+      if (sustainRepeats <= 0) {
+        return;
+      }
+      state.releaseTimerByKey[keyLabel] = {
+        remaining: sustainRepeats,
+        delay: state.triggerCooldownMs,
+        timer: null
+      };
+      scheduleDrainStep(keyLabel);
+    }
+    function releaseMissingKeys(nextKeys) {
+      state.previousActiveKeys.forEach((keyLabel) => {
+        if (!nextKeys.has(keyLabel)) {
+          scheduleSustain(keyLabel);
+        }
+      });
+    }
+    function shouldTriggerKey(keyLabel) {
+      if (!keyLabel) {
+        return false;
+      }
+      const now2 = Date.now();
+      const lastTriggeredAt = state.lastTriggeredAtByKey[keyLabel] || 0;
+      if (now2 - lastTriggeredAt < state.triggerCooldownMs) {
+        return false;
+      }
+      state.lastTriggeredAtByKey[keyLabel] = now2;
+      return true;
+    }
+    function handleSensorIds(sensorIds) {
+      state.activeChannels = sensorIds instanceof Set ? sensorIds : /* @__PURE__ */ new Set();
+      updateActiveChannels();
+      const currentKeys = /* @__PURE__ */ new Set();
+      let didTrigger = false;
+      state.activeChannels.forEach((channel) => {
+        const keyLabel = getBinding(channel);
+        if (!keyLabel) {
+          return;
+        }
+        currentKeys.add(keyLabel);
+        clearReleaseTimer(keyLabel);
+        if (shouldTriggerKey(keyLabel)) {
+          fireChargedTrigger(keyLabel);
+          didTrigger = true;
+        }
+      });
+      releaseMissingKeys(currentKeys);
+      state.previousActiveKeys = currentKeys;
+      if (didTrigger && typeof onSerialActivity === "function") {
+        onSerialActivity();
+      }
+    }
+    function handleSerialLine(line2) {
+      state.lastLine = String(line2 || "").trim();
+      const sensorIds = parseSensorLine(state.lastLine);
+      handleSensorIds(sensorIds);
+      updateStatus();
+    }
+    async function disconnect() {
+      try {
+        if (state.reader) {
+          await state.reader.cancel();
+          state.reader = null;
+        }
+        if (state.port) {
+          await state.port.close();
+          state.port = null;
+        }
+      } catch (error) {
+        state.error = `Disconnect error: ${error.message}`;
+      } finally {
+        state.isConnected = false;
+        state.readLoopActive = false;
+        state.port = null;
+        resetChargeState();
+        updateStatus();
+      }
+    }
+    async function connectToAuthorizedPort() {
+      if (!isSupported || !navigator.serial.getPorts) {
+        return false;
+      }
+      try {
+        const ports = await navigator.serial.getPorts();
+        if (!ports.length) {
+          return false;
+        }
+        resetChargeState();
+        state.error = "";
+        state.port = ports[0];
+        await state.port.open({ baudRate: state.baudRate });
+        state.isConnected = true;
+        updateStatus();
+        readSerial();
+        return true;
+      } catch (error) {
+        state.error = `Auto-connect error: ${error.message}`;
+        state.port = null;
+        state.isConnected = false;
+        updateStatus();
+        return false;
+      }
+    }
+    async function readSerial() {
+      if (!state.port || !state.port.readable) {
+        return;
+      }
+      state.readLoopActive = true;
+      try {
+        const textDecoder = new TextDecoderStream();
+        const readableStreamClosed = state.port.readable.pipeTo(textDecoder.writable);
+        state.reader = textDecoder.readable.getReader();
+        let buffer = "";
+        while (state.readLoopActive) {
+          const { value, done } = await state.reader.read();
+          if (done) {
+            break;
+          }
+          buffer += value;
+          const lines2 = buffer.split("\n");
+          buffer = lines2.pop() || "";
+          lines2.forEach((line2) => {
+            if (line2.trim()) {
+              handleSerialLine(line2);
+            }
+          });
+        }
+        await readableStreamClosed.catch(() => {
+        });
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          state.error = `Serial read error: ${error.message}`;
+        }
+      } finally {
+        state.reader = null;
+        state.readLoopActive = false;
+        state.isConnected = false;
+        updateStatus();
+      }
+    }
+    async function connect() {
+      if (!isSupported) {
+        state.error = "Web Serial is not supported in this browser";
+        updateStatus();
+        return;
+      }
+      try {
+        state.error = "";
+        resetChargeState();
+        await disconnect();
+        state.port = await navigator.serial.requestPort();
+        await state.port.open({ baudRate: state.baudRate });
+        state.isConnected = true;
+        state.autoReconnect = true;
+        saveStoredState(state);
+        updateStatus();
+        readSerial();
+      } catch (error) {
+        if (error.name !== "NotFoundError") {
+          state.error = `Connection error: ${error.message}`;
+        }
+        state.isConnected = false;
+        state.port = null;
+        updateStatus();
+      }
+    }
+    if ($panel.length) {
+      renderPanel();
+      setPanelVisible(false);
+    }
+    window.addEventListener("beforeunload", () => {
+      disconnect();
+    });
+    return {
+      isSupported,
+      connect,
+      disconnect,
+      handleSerialLine,
+      handleSensorIds,
+      connectToAuthorizedPort,
+      setVisible(visible) {
+        setPanelVisible(visible);
+        if (visible && state.autoReconnect && !state.isConnected) {
+          connectToAuthorizedPort();
+        }
+        updateSupportCopy();
+        updateStatus();
+        updateActiveChannels();
+        updateBindingsUI();
+      },
+      getBinding,
+      setBinding,
+      setBaudRate(nextBaudRate) {
+        state.baudRate = Math.max(300, Number.parseInt(nextBaudRate, 10) || DEFAULT_BAUD_RATE);
+        saveStoredState(state);
+        updateStatus();
+      },
+      setTriggerCooldownMs(nextCooldownMs) {
+        state.triggerCooldownMs = Math.max(0, Number.parseInt(nextCooldownMs, 10) || DEFAULT_TRIGGER_COOLDOWN_MS);
+        saveStoredState(state);
+        updateStatus();
+      },
+      setAutoReconnect(nextAutoReconnect) {
+        state.autoReconnect = !!nextAutoReconnect;
+        saveStoredState(state);
+        updateStatus();
+      },
+      getBindings() {
+        return state.bindings.slice();
+      },
+      refresh() {
+        updateSupportCopy();
+        updateStatus();
+        updateActiveChannels();
+        updateBindingsUI();
+      },
+      state
+    };
+  }
+
   // src/animations/change.js
   var name = "change-colors";
   var hash = "3,";
@@ -18750,8 +19499,8 @@
       setTimeout(reset18, duration * 0.25);
     }
     function update21() {
-      const index2 = palette_default.keys.length - 1 - i % palette_default.keys.length;
-      const key = palette_default.keys[index2];
+      const index = palette_default.keys.length - 1 - i % palette_default.keys.length;
+      const key = palette_default.keys[index];
       shape4.fill = palette_default.colors[key];
     }
     function resize19() {
@@ -18831,9 +19580,9 @@
   }
   function onUpdate3(group8, u) {
     const t = clamp(map(u, 0, 0.25, 0, 1), 0, 1);
-    const index2 = Math.floor(t * amount3);
+    const index = Math.floor(t * amount3);
     for (let i = 0; i < lines.length; i++) {
-      lines[i].visible = i <= index2;
+      lines[i].visible = i <= index;
     }
   }
   function updateLine(line2, i) {
@@ -19430,13 +20179,13 @@
       animate_out8.stop();
     }
     const offset = Math.PI / 2;
-    const index2 = Math.random() * 4;
+    const index = Math.random() * 4;
     let phi = 5;
-    if (index2 > 3) {
+    if (index > 3) {
       phi = 5;
-    } else if (index2 > 2) {
+    } else if (index > 2) {
       phi = 4;
-    } else if (index2 > 1) {
+    } else if (index > 1) {
       phi = 2;
     } else {
       phi = 1;
@@ -19818,10 +20567,10 @@
       const x = radius * Math.cos(theta);
       const y = radius * Math.sin(theta);
       v.set(x, y);
-      const index2 = i + 1;
-      const center2 = Math.PI * (index2 / amount10);
+      const index = i + 1;
+      const center2 = Math.PI * (index / amount10);
       const parallel = range(amount10).map((j) => {
-        const t = Math.min(j / index2, 1);
+        const t = Math.min(j / index, 1);
         const angle = t * (endAngle - startAngle) + startAngle + center2 + drift;
         const p = shape3.vertices[j];
         const x2 = radius * Math.cos(angle);
@@ -19830,7 +20579,7 @@
       });
       sequence.push(parallel);
       parallel[0].onComplete(() => {
-        const parallel2 = sequence[index2];
+        const parallel2 = sequence[index];
         if (parallel2 && parallel2.length > 0) {
           parallel2.forEach((tween2) => tween2.start());
           return;
@@ -19888,7 +20637,7 @@
     group7.translation.copy(center);
   }
   function reset17() {
-    let index2, longest = 0;
+    let index, longest = 0;
     const innerRadius = two.height * 2 / 90;
     const outerRadius = two.height * 4 / 90;
     circles5.forEach((circle2, i) => {
@@ -19909,11 +20658,11 @@
       circle2.tween = new Tween(circle2).to({ scale: 1, linewidth: 0 }, 0.2 * duration).easing(Easing.Sinusoidal.Out).delay(delay).onStart(() => circle2.visible = true).onComplete(() => circle2.visible = false);
       if (longest < delay) {
         longest = delay;
-        index2 = i;
+        index = i;
       }
     });
-    circles5[index2].tween.onComplete(() => {
-      circles5[index2].visible = false;
+    circles5[index].tween.onComplete(() => {
+      circles5[index].visible = false;
       reset17();
     });
   }
@@ -19932,9 +20681,10 @@
   register(animation18.hash, animation18);
 
   // src/index.js
-  (0, import_jquery2.default)(() => {
-    const $container = (0, import_jquery2.default)("#content"), $hint = (0, import_jquery2.default)("#hint"), $gameCredit = (0, import_jquery2.default)("#game-credit"), $credits = (0, import_jquery2.default)("#credits"), $embed = (0, import_jquery2.default)("#embed"), $merchandise = (0, import_jquery2.default)("#merchandise"), $window = (0, import_jquery2.default)(window);
-    let ui, buttons, width, height, landscape, embedding = false, playing19 = false, merchandising = false;
+  (0, import_jquery3.default)(() => {
+    const $container = (0, import_jquery3.default)("#content"), $hint = (0, import_jquery3.default)("#hint"), $gameCredit = (0, import_jquery3.default)("#game-credit"), $credits = (0, import_jquery3.default)("#credits"), $embed = (0, import_jquery3.default)("#embed"), $merchandise = (0, import_jquery3.default)("#merchandise"), $window = (0, import_jquery3.default)(window);
+    let ui, buttons, width, height, landscape, embedding = false, playing19 = false, merchandising = false, configVisible = false;
+    let serialConfig;
     const showHint = debounce(() => {
       if (embedding) {
         showHint();
@@ -19992,14 +20742,19 @@
     function initialize() {
       two.appendTo($container[0]);
       animations_default.updateAudio();
-      (0, import_jquery2.default)("#embed-button").click((e) => {
+      serialConfig = createSerialConfig({
+        triggerKeyLabel,
+        onSerialActivity: triggered
+      });
+      setConfigVisible(false);
+      (0, import_jquery3.default)("#embed-button").click((e) => {
         e.preventDefault();
         $hint.fadeOut();
         $merchandise.fadeOut();
         $embed.fadeIn(selectEmbed);
       });
       let firstRun = true;
-      (0, import_jquery2.default)("#merchandise-button").click((e) => {
+      (0, import_jquery3.default)("#merchandise-button").click((e) => {
         e.preventDefault();
         if (firstRun) {
           $merchandise.css({
@@ -20016,7 +20771,7 @@
           merchandising = true;
         });
       });
-      (0, import_jquery2.default)("#close-merchandise").click((e) => {
+      (0, import_jquery3.default)("#close-merchandise").click((e) => {
         e.preventDefault();
         embedding = false;
         merchandising = false;
@@ -20033,109 +20788,42 @@
         mouse.set(e.clientX, e.clientY);
         showCredits();
       }).bind("keydown", (e, data) => {
+        const isBackquote = e.key === "`" || e.code === "Backquote" || e.which === 192;
+        const isDisconnectShortcut = e.key === "]" || e.code === "BracketRight" || e.which === 221;
+        if (isBackquote) {
+          e.preventDefault();
+          toggleConfigVisible();
+          return;
+        }
+        if (isDisconnectShortcut && !e.metaKey && !e.ctrlKey) {
+          e.preventDefault();
+          if (serialConfig && serialConfig.state && serialConfig.state.isConnected) {
+            serialConfig.disconnect();
+          }
+          return;
+        }
+        if (configVisible) {
+          return;
+        }
         if (e.metaKey || e.ctrlKey) {
           return;
         }
         e.preventDefault();
         const code = e.which || data;
-        let index2;
-        switch (code) {
-          // Q - P
-          case 81:
-            index2 = "0,0";
-            break;
-          case 87:
-            index2 = "0,1";
-            break;
-          case 69:
-            index2 = "0,2";
-            break;
-          case 82:
-            index2 = "0,3";
-            break;
-          case 84:
-            index2 = "0,4";
-            break;
-          case 89:
-            index2 = "0,5";
-            break;
-          case 85:
-            index2 = "0,6";
-            break;
-          case 73:
-            index2 = "0,7";
-            break;
-          case 79:
-            index2 = "0,8";
-            break;
-          case 80:
-            index2 = "0,9";
-            break;
-          // A - L
-          case 65:
-            index2 = "1,0";
-            break;
-          case 83:
-            index2 = "1,1";
-            break;
-          case 68:
-            index2 = "1,2";
-            break;
-          case 70:
-            index2 = "1,3";
-            break;
-          case 71:
-            index2 = "1,4";
-            break;
-          case 72:
-            index2 = "1,5";
-            break;
-          case 74:
-            index2 = "1,6";
-            break;
-          case 75:
-            index2 = "1,7";
-            break;
-          case 76:
-            index2 = "1,8";
-            break;
-          // Z - M
-          case 90:
-            index2 = "2,0";
-            break;
-          case 88:
-            index2 = "2,1";
-            break;
-          case 67:
-            index2 = "2,2";
-            break;
-          case 86:
-            index2 = "2,3";
-            break;
-          case 66:
-            index2 = "2,4";
-            break;
-          case 78:
-            index2 = "2,5";
-            break;
-          case 77:
-            index2 = "2,6";
-            break;
-        }
-        trigger(index2);
-        triggered();
+        triggerKeyLabel(keyCodeToLabel(code));
       }).bind("keyup", (e) => {
+        if (configVisible) {
+          return;
+        }
         const code = e.which;
         switch (code) {
           // SPACE
           case 32:
-            index = "2,7";
-            trigger(index);
-            triggered();
+            triggerKeyLabel(keyCodeToLabel(code));
             break;
           case 27:
             if (merchandising) {
-              (0, import_jquery2.default)("#close-merchandise").click();
+              (0, import_jquery3.default)("#close-merchandise").click();
             }
             break;
         }
@@ -20167,14 +20855,14 @@
         navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
       }
       setTimeout(() => {
-        (0, import_jquery2.default)("#lobby").fadeOut(triggerLogo);
+        (0, import_jquery3.default)("#lobby").fadeOut(triggerLogo);
         if (url.boolean("kiosk")) {
-          (0, import_jquery2.default)(document.body).addClass("kiosk");
+          (0, import_jquery3.default)(document.body).addClass("kiosk");
           triggered();
           $hint.fadeIn();
           return;
         } else if (/merchandise/gi.test(window.location.pathname)) {
-          (0, import_jquery2.default)("#merchandise-button").trigger("click");
+          (0, import_jquery3.default)("#merchandise-button").trigger("click");
           return;
         }
         $hint.fadeIn();
@@ -20252,7 +20940,7 @@
       const inputs = [];
       const outputs = [];
       const names = [];
-      const $midi = (0, import_jquery2.default)(".midi-connections");
+      const $midi = (0, import_jquery3.default)(".midi-connections");
       const show = () => {
         $hint.find(".message").animate({ opacity: 0 }, () => {
           $hint.css({
@@ -20337,9 +21025,9 @@
       window.onmidimessage = messageReceived;
       midi.addEventListener("statechange", init);
       init({ target: midi });
-      onMIDISuccess.dispatch = (index2) => {
+      onMIDISuccess.dispatch = (index) => {
         const duration2 = 100;
-        const note = indicesToNotes[index2];
+        const note = indicesToNotes[index];
         const velocity = 100;
         if (!note) {
           return;
@@ -20402,10 +21090,10 @@
         }
       }
       function noteOn(note) {
-        const index2 = notesToIndices[note];
-        if (index2) {
+        const index = notesToIndices[note];
+        if (index) {
           onMIDISuccess.receiving = true;
-          trigger(index2);
+          trigger(index);
           triggered();
           onMIDISuccess.receiving = false;
         }
@@ -20435,13 +21123,13 @@
       buttons[1] = range(9).map(createButton);
       buttons[2] = range(8).map(createButton);
       const touches = [];
-      let e, x, y, l, row, col, index2;
+      let e, x, y, l, row, col, index;
       $container.bind("touchstart", (event) => {
         e = event.originalEvent;
         each(e.touches, startTouchEnter);
       }).bind("mousedown", (event) => {
         startTouchEnter(event.originalEvent);
-        (0, import_jquery2.default)(window).bind("mousemove", mousemove).bind("mouseup", mouseup);
+        (0, import_jquery3.default)(window).bind("mousemove", mousemove).bind("mouseup", mouseup);
       }).bind("touchmove", (event) => {
         e = event.originalEvent;
         each(e.touches, updateTouchEnter);
@@ -20453,8 +21141,8 @@
       });
       buttons.forEach((group8, i) => {
         group8.forEach((button, j) => {
-          const index3 = `${i},${j}`;
-          buttons.map[index3] = button;
+          const index2 = `${i},${j}`;
+          buttons.map[index2] = button;
         });
       });
       function createButton() {
@@ -20481,32 +21169,32 @@
       function startTouchEnter(touch) {
         x = touch.clientX;
         y = touch.clientY;
-        index2 = getIndex(x, y, x, y);
+        index = getIndex(x, y, x, y);
         touches[touch.identifier] = {
-          id: index2,
+          id: index,
           x,
           y
         };
-        triggerButton(index2, buttons.map[index2]);
+        triggerButton(index, buttons.map[index]);
       }
       function updateTouchEnter(touch) {
         x = touch.clientX;
         y = touch.clientY;
-        index2 = getIndex(
+        index = getIndex(
           x,
           y,
           touches[touch.identifier].x,
           touches[touch.identifier].y
         );
-        if (touches[touch.identifier] && touches[touch.identifier].id !== index2) {
-          triggerButton(index2, buttons.map[index2]);
-          touches[touch.identifier].id = index2;
+        if (touches[touch.identifier] && touches[touch.identifier].id !== index) {
+          triggerButton(index, buttons.map[index]);
+          touches[touch.identifier].id = index;
         }
         touches[touch.identifier].x = x;
         touches[touch.identifier].y = y;
       }
-      function triggerButton(index3, button) {
-        trigger(index3);
+      function triggerButton(index2, button) {
+        trigger(index2);
         triggered();
         if (palette_default.get().isDark) {
           button.fill = "rgba(255, 255, 255, 0.3)";
@@ -20520,7 +21208,7 @@
         updateTouchEnter(e2.originalEvent);
       }
       function mouseup(e2) {
-        (0, import_jquery2.default)(window).unbind("mousemove", mousemove).unbind("mouseup", mouseup);
+        (0, import_jquery3.default)(window).unbind("mousemove", mousemove).unbind("mouseup", mouseup);
       }
     }
     function trigger(hash2, silent2) {
@@ -20549,6 +21237,114 @@
     }
     function showCredits() {
       hideCredits();
+    }
+    function setConfigVisible(visible) {
+      configVisible = !!visible;
+      if (serialConfig) {
+        serialConfig.setVisible(configVisible);
+      }
+      (0, import_jquery3.default)(document.body).toggleClass("config-mode", configVisible);
+    }
+    function toggleConfigVisible() {
+      setConfigVisible(!configVisible);
+    }
+    function keyCodeToLabel(code) {
+      switch (code) {
+        case 81:
+          return "Q";
+        case 87:
+          return "W";
+        case 69:
+          return "E";
+        case 82:
+          return "R";
+        case 84:
+          return "T";
+        case 89:
+          return "Y";
+        case 85:
+          return "U";
+        case 73:
+          return "I";
+        case 79:
+          return "O";
+        case 80:
+          return "P";
+        case 65:
+          return "A";
+        case 83:
+          return "S";
+        case 68:
+          return "D";
+        case 70:
+          return "F";
+        case 71:
+          return "G";
+        case 72:
+          return "H";
+        case 74:
+          return "J";
+        case 75:
+          return "K";
+        case 76:
+          return "L";
+        case 90:
+          return "Z";
+        case 88:
+          return "X";
+        case 67:
+          return "C";
+        case 86:
+          return "V";
+        case 66:
+          return "B";
+        case 78:
+          return "N";
+        case 77:
+          return "M";
+        case 32:
+          return "SPACE";
+        default:
+          return "";
+      }
+    }
+    function triggerKeyLabel(label, silent2, celebrate = true) {
+      const actionHash = {
+        Q: "0,0",
+        W: "0,1",
+        E: "0,2",
+        R: "0,3",
+        T: "0,4",
+        Y: "0,5",
+        U: "0,6",
+        I: "0,7",
+        O: "0,8",
+        P: "0,9",
+        A: "1,0",
+        S: "1,1",
+        D: "1,2",
+        F: "1,3",
+        G: "1,4",
+        H: "1,5",
+        J: "1,6",
+        K: "1,7",
+        L: "1,8",
+        Z: "2,0",
+        X: "2,1",
+        C: "2,2",
+        V: "2,3",
+        B: "2,4",
+        N: "2,5",
+        M: "2,6",
+        SPACE: "2,7"
+      }[label];
+      if (!actionHash) {
+        return;
+      }
+      trigger(actionHash, silent2);
+      if (celebrate) {
+        triggered();
+      }
     }
   });
   if (window.console && window.console.log) {
