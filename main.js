@@ -20829,14 +20829,10 @@
         }
       });
       createMobileUI();
-      if (navigator.maxTouchPoints > 0) {
-        $hint.find(".message").html("Step on a rock");
-      } else {
-        if (!url.boolean("kiosk")) {
-          $credits.css("display", "block");
-        }
-        $hint.find(".message").html("Press any key, A to Z or spacebar");
+      if (!url.boolean("kiosk")) {
+        $credits.css("display", "block");
       }
+      $hint.find(".message").html("Step on a rock");
       two.bind("update", () => {
         update();
         palette_default.update();
