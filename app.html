@@ -1,0 +1,43 @@
+<!doctype html>
+<html prefix="og: http://ogp.me/ns#" itemscope itemtype="http://schema.org/CreativeWork">
+  <head>
+    <meta charset="utf-8">
+    <title>Patatap</title>
+
+    <link rel="icon" href="./images/favicon.ico" />
+
+    <!-- iOS specific catches -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- styles -->
+    <link rel="stylesheet" media="screen" type="text/css" href="./styles/main.css" />
+
+  </head>
+  <body style="background: rgb(181, 181, 181);">
+    <div id="content"></div>
+    <div id="hint" style="display: none;">
+      <p class="message"></p>
+      <br /><br />
+      <p class="midi-connections" style="display: none;"></p>
+    </div>
+    <div id="config-panel" class="config-panel" hidden></div>
+    <div id="embed" style="display: none;"></div>
+    <div id="lobby">
+      <div id="loader"></div>
+      <div id="asset-info">
+        <span id="loaded">0</span> / <span id="total-assets">26</span>
+      </div>
+    </div>
+    <div class="scripts" style="display: none;">
+      <script src="./third-party/url.js"></script>
+      <script>
+        window.url.kiosk = true;
+        window.url.local = true;
+      </script>
+      <script src="./main.js"></script>
+      <!-- TODO: Add Analytics -->
+    </div>
+  </body>
+</html>
