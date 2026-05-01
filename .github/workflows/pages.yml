@@ -32,6 +32,14 @@ jobs:
       - name: Build site
         run: npm run build
 
+      - name: Prepare Pages artifact
+        run: |
+          rm -rf dist
+          mkdir -p dist
+          cp *.html sitemap.xml main.js main.min.js dist/
+          cp -R styles assets images third-party dist/
+          touch dist/.nojekyll
+
       - name: Publish to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
